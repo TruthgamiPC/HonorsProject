@@ -19,13 +19,13 @@ with io.open(file_name, 'rb') as image_file:
 image = vision.Image(content=content)
 
 # Performs label detection on the image file
-response = client.label_detection(image=image)
+#response = client.label_detection(image=image)
 reponse_text = client.text_detection(image=image)
-labels = response.label_annotations
+#labels = response.label_annotations
 
-print('Labels:')
-for label in labels:
-    print(label.description)
+#print('Labels:')
+#for label in labels:
+#    print(label.description)
 
 print('Text:\n')
 text_data = []
