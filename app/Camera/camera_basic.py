@@ -7,7 +7,7 @@ def photoTake(camera):
 
     camera.start_preview()
     sleep(5)
-    camera.capture('../images/image.jpg')
+    camera.capture('../images/image_pi_camera.jpg')
     camera.stop_preview()
 
 
