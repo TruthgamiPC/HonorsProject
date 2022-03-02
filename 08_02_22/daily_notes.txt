@@ -1,9 +1,0 @@
-# Summary
-
-- Soldering didn't go too well in the QMB so ordering kit for home
-- Camera seems simple to operate through python with the picamera library and can be pushed into a function of a class
-- will follow up by testing camera commands more and try to finish the full function by trying to call from a custom interface
-
-
-- Display will be tested when soldering is complete
-- Small Concerns to how the UI will look
