@@ -32,6 +32,22 @@ class VisionEntry():
     def set_out(self,fileout):
         self.out_img = fileout
 
+    '''
+    ?#Block1:
+    ?#Para: xxx xxx xxx xxx ~#Para.
+    ?#Para: asd dsa bro wut ~#Para.
+    ~#Block1.
+
+    ?#Block2:
+    ?#Para: asd dsa bro wut ~#Para.
+    ~#Block2.
+
+    ?#Block3:
+    ?#Para: dsadsa dsadwq21 xxx xxx ~#Para.
+    ?#Para: asd wut ~#Para.
+    ~#Block3.
+    '''
+
     def draw_boxes(self,image,bounds,color):
         """Draw a border around the image using the hints in the vector list."""
         # image = Image.open(self.source)
@@ -100,12 +116,15 @@ class VisionEntry():
                     for word in paragraph.words:
                         legal_word = True
                         text_word = ""
+                        word_length = len(word.symbols.text)
 
                         for symbol in word.symbols:
                             # Append symbol text data to the final word until completion.
                             text_word += symbol.text
                             if not (any(c.isalpha() for c in symbol.text)):
                                 legal_word = False
+
+
 
                         self.bounds_words.append(word.bounding_box)
                         if not legal_word:
@@ -163,9 +182,9 @@ class VisionEntry():
         #             self.draw_boxes(image2,paragraphs_i.bounds,"red")
 
 
-        # for each in self.pageObj.field:
-        #     for eachP in each.field:
-        #         print(eachP.field)
+        for each in self.pageObj.field:
+            for eachP in each.field:
+                print(eachP.field)
 
 
 
