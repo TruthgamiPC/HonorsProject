@@ -1,0 +1,15 @@
+# GUI
+- https://www.tutorialspoint.com/how-to-stop-tkinter-frame-from-shrinking-to-fit-its-contents
+- https://www.delftstack.com/howto/python-tkinter/how-to-change-the-tkinter-button-size/
+- http://tcl.tk/man/tcl8.5/TkCmd/grid.htm#M24 - tkinter doc
+- https://stackoverflow.com/questions/35161101/tkinter-how-to-stop-frame-changing-size-when-widget-is-added
+- https://www.geeksforgeeks.org/tkinter-application-to-switch-between-different-page-frames/
+- https://www.geeksforgeeks.org/python-forget_pack-and-forget_grid-method-in-tkinter/
+- https://www.youtube.com/watch?v=e6ktaqlXaec&ab_channel=Dr.AndyWicks
+- https://www.pythontutorial.net/tkinter/tkinter-frame/
+- https://stackoverflow.com/questions/45122244/having-frames-next-to-each-other-in-tkinter
+- https://www.tutorialspoint.com/how-to-stop-tkinter-frame-from-shrinking-to-fit-its-contents
+- https://www.youtube.com/watch?v=rZxOe1kVF8Q&ab_channel=Codemy.com - dynamic sizes
+- https://www.youtube.com/watch?v=bH9r3wM9Idw&ab_channel=Codemy.com - list tkinter
+- https://stackoverflow.com/questions/4174575/adding-padding-to-a-tkinter-widget-only-on-one-side
+- https://www.tutorialspoint.com/how-to-open-pil-image-in-tkinter-on-canvas#:~:text=In%20order%20to%20open%20the,%2Cy%2Cimage)%20method - images
