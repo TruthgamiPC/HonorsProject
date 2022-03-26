@@ -13,3 +13,14 @@
 - https://www.youtube.com/watch?v=bH9r3wM9Idw&ab_channel=Codemy.com - list tkinter
 - https://stackoverflow.com/questions/4174575/adding-padding-to-a-tkinter-widget-only-on-one-side
 - https://www.tutorialspoint.com/how-to-open-pil-image-in-tkinter-on-canvas#:~:text=In%20order%20to%20open%20the,%2Cy%2Cimage)%20method - images
+- https://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python - glob
+
+# All Sources used
+- Python Client GitHub direct -> [https://github.com/googleapis/google-cloud-python#google-cloud-python-client](https://github.com/googleapis/google-cloud-python#google-cloud-python-client)
+- Python Client vision quickstart -> [https://github.com/googleapis/python-vision/blob/HEAD/samples/snippets/quickstart/quickstart.py](https://github.com/googleapis/python-vision/blob/HEAD/samples/snippets/quickstart/quickstart.py)
+- Vision API source tutorial by Google -> [https://cloud.google.com/vision/docs/libraries#cloud-console](https://cloud.google.com/vision/docs/libraries#cloud-console)
+- Python building of env and libraries -> [https://cloud.google.com/vision/docs/quickstart-client-libraries#client-libraries-install-python] (https://cloud.google.com/vision/docs/quickstart-client-libraries#client-libraries-install-python)
+- Translate API source tutorial by Google -> [https://cloud.google.com/translate/docs/reference/rest/?apix=true](https://cloud.google.com/translate/docs/reference/rest/?apix=true)
+- Extra Translator API tutorial by pypi -> [https://pypi.org/project/googletrans/](https://pypi.org/project/googletrans/)
+- Base page to google translator APi (with useful links to all sub-parts) -> [https://cloud.google.com/translate/docs#docs](https://cloud.google.com/translate/docs#docs)
+- Python example from google on translation API -> [https://github.com/googleapis/python-translate/blob/HEAD/samples/snippets/snippets.py](https://github.com/googleapis/python-translate/blob/HEAD/samples/snippets/snippets.py)

@@ -5,5 +5,3 @@
 - 2.2. This image will be just for reference it will not hold the translations just identification to what was translated.
 - 3. Explored several methods to using google cloud services with vision and coming along a solution which might be fitting for my application. This will have a rule set which will define what to include and what to exclude from the OCR detection.
 - 4. NEED to research python args for potential discoveries in loading scripts
-
-# xx-xx / 03 / 2022

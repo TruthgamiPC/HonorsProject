@@ -1,23 +1,21 @@
 import os
 import io
+import json
 
 from structures import *
 
+import six
 import argparse
-from enum import Enum
+
 from PIL import Image, ImageDraw
+
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'flawless-parity-343711-7c796736ffff.json'
 
 # Imports the Google Cloud client library
 from google.cloud import vision
+from google.cloud import translate_v2 as translate
 
-class FeatureType(Enum):
-    PAGE = 1
-    BLOCK = 2
-    PARA = 3
-    WORD = 4
-    SYMBOL = 5
 
 # Identify text blocks - genreate image with labels
 class VisionEntry():
@@ -25,28 +23,14 @@ class VisionEntry():
         self.source = source
         self.out_img = ""
         self.pageObj = Page([])
+        self.TranslatedObj = Page([])
         self.bounds_para = []
         self.bounds_block = []
-        self.bounds_words = []
+
 
     def set_out(self,fileout):
         self.out_img = fileout
 
-    '''
-    ?#Block1:
-    ?#Para: xxx xxx xxx xxx ~#Para.
-    ?#Para: asd dsa bro wut ~#Para.
-    ~#Block1.
-
-    ?#Block2:
-    ?#Para: asd dsa bro wut ~#Para.
-    ~#Block2.
-
-    ?#Block3:
-    ?#Para: dsadsa dsadwq21 xxx xxx ~#Para.
-    ?#Para: asd wut ~#Para.
-    ~#Block3.
-    '''
 
     def draw_boxes(self,image,bounds,color):
         """Draw a border around the image using the hints in the vector list."""
@@ -90,19 +74,16 @@ class VisionEntry():
 
         # Key component
         # Page For loop - This is generally a 1 off thing per picture as the resolution should not support multi page veriations.
-        page_obj = Page([])
         for page in document.pages:
             page_data = []
 
             # Blocks for loop - Expected 1-15~ average blocks as space in between certain labels on products and documents vary too much - it will still be pretty useful for general marking to the user. - SEARCHING FOR way to number
             for block in page.blocks:
                 # Build Temp data holders
-                legal_block = True
                 block_data = []
-                block_Obj = Block(block_data,legal_block)
+                block_Obj = Block(block_data)
 
-
-                # Paragraph for loop - Paragraph specifacation is not too good but will be used as the general marking of bounds for text because it still allows to be very clear what text is focused on. - WILL INCLUDE the key colouring for the images.
+                # Paragraph for loop - Paragraph specifacation is not too good but will be used as the general marking of bounds for text because it still allows to be very clear what text is focused on.
                 for paragraph in block.paragraphs:
                     # Build Temp data holders
                     text_paragraph = ""
@@ -111,12 +92,11 @@ class VisionEntry():
                     para_size = len(paragraph.words)
                     illegal_words = 0
 
-
                     # Word and Symbol - always connected - will probably not have colouring because it will clutter the image too much also colour coding is difficult ot manage in small amounts - Word doesn't hold much value in the final solution its a fixed solution for current idea.
                     for word in paragraph.words:
                         legal_word = True
                         text_word = ""
-                        word_length = len(word.symbols.text)
+                        # word_length = len(word.symbols.text)
 
                         for symbol in word.symbols:
                             # Append symbol text data to the final word until completion.
@@ -124,15 +104,11 @@ class VisionEntry():
                             if not (any(c.isalpha() for c in symbol.text)):
                                 legal_word = False
 
-
-
-                        self.bounds_words.append(word.bounding_box)
                         if not legal_word:
                             illegal_words += 1
 
                         # Append the word to the paragraph.
                         text_paragraph += (text_word + " ")
-
 
                     # Paragraph text validity for translation -
                     if illegal_words == para_size:
@@ -140,6 +116,7 @@ class VisionEntry():
                         # Colour Differently
                     else:
                         para_Obj.valid_true()
+
                         self.bounds_para.append(paragraph.bounding_box)
 
                     # Update the objects to be correct with the text data.
@@ -147,44 +124,81 @@ class VisionEntry():
                     # para_Obj.set_bounds(paragraph.bounding_box)
                     block_Obj.add_item(para_Obj)
 
-                    # self.bounds_para.append(paragraph.bounding_box)
+                    self.bounds_para.append(paragraph.bounding_box)
 
-                #print(block_Obj.field)
-                # Testing object storage
-                # for each in block_Obj.field:
-                #     print(each.valid)
-
-                block_Obj.set_bounds(block.bounding_box)
-                # self.bounds_block.append(block.bounding_box)
+                # block_Obj.set_bounds(block.bounding_box)
+                self.bounds_block.append(block.bounding_box)
                 self.pageObj.add_item(block_Obj)
-        # print(self.bounds_para)
-        #------------------------
-        # print(self.bounds_block)
-        # image2 = Image.open(self.source)
-        # self.draw_boxes(image2,self.bounds_para,"green")
-        # self.draw_boxes(image2,self.bounds_block,"blue")
 
 
+    # Google translate call and functionality
+    def translation_func(self,t_language):
+        translate_client = translate.Client()
 
+        for each in self.pageObj.field:
+            trans_block_Obj = Block([])
 
+            for paragraphs_i in each.field:
+                trans_para_Obj = Paragraph("",True)
 
+                if paragraphs_i.valid:
+                    trans_para_Obj.add_item((translate_client.translate(paragraphs_i.field, target_language=t_language))["translatedText"])
+                    trans_para_Obj.valid_true()
+                else:
+                    trans_para_Obj.add_item(paragraphs_i.field)
+                    trans_para_Obj.valid_false()
+
+                trans_block_Obj.add_item(trans_para_Obj)
+
+            self.TranslatedObj.add_item(trans_block_Obj)
+
+    # Default main function for vision class that does all background operations
+    # Any API calls and any file handling is managed in this class so all actions proceed through this system.
+    # Will need patches when file loading is introduced unless a new format is introduced
     def vision_op(self):
         image2 = Image.open(self.source)
         self.vision_act()
-        # self.draw_boxes(image2,self.bounds_block,"blue")
+        self.draw_boxes(image2,self.bounds_block,"blue")
         self.draw_boxes(image2,self.bounds_para,"red")
 
-        # for each in self.pageObj.field:
-        #     for paragraphs_i in each.field:
-        #         if paragraphs_i.valid:
-        #             self.draw_boxes(image2,paragraphs_i.bounds,"green")
-        #         else:
-        #             self.draw_boxes(image2,paragraphs_i.bounds,"red")
+        self.translation_func("bg")
 
+        # Sample code to save the page object to a file
+        file_ver = "../text_data/test" + ".txt"
+        try:
+            f = open(file_ver,"w", encoding="utf-8")
 
-        for each in self.pageObj.field:
-            for eachP in each.field:
-                print(eachP.field)
+            for x in range(len(self.TranslatedObj.field)):
+                temp_block_text = "block_data_" + str(x+1) + ":\n"
+                for y in range(len(self.TranslatedObj.field[x].field)):
+
+                    if (self.TranslatedObj.field[x]).field[y].valid:
+                        temp_block_text += ("\t-translated_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
+                        temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.pageObj.field[x].field[y].field) + "\n")
+
+                    else:
+                        temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
+
+                f.write(temp_block_text)
+
+        except IOError:
+            print(file_ver + " - Not found")
+
+            # Original method to writting to a file - used as an example
+            # for each in self.TranslatedObj.field:
+            #     temp_block_text = "block_data_" + str(block_counter) + ":\n"
+            #     para_counter = 1
+            #     # print("#------------------------------------#")
+            #     for paragraphs_i in each.field:
+            #         # print(paragraphs_i.field)
+            #         if paragraphs_i.valid:
+            #             temp_block_text += ("\t-paragraph_text_" + str(para_counter) + ": " + str(paragraphs_i.field) + "\n")
+            #         temp_block_text += ("\t-paragraph_text_" + str(para_counter) + ": " + str(paragraphs_i.field) + "\n")
+            #         temp_block_text += ("\t-paragraph_state_" + str(para_counter) + ": " + str(paragraphs_i.valid) + "\n")
+            #         para_counter += 1
+            #     block_counter += 1
+            #     # print(temp_block_text)
+            #     f.write(temp_block_text)
 
 
 
