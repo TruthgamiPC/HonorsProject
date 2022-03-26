@@ -2,8 +2,15 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 
-LARGE_FONT = ("Verdana",14)
+from picamera import PiCamera
+from time import sleep
 
+import datetime
+
+import os
+import io
+
+LARGE_FONT = ("Verdana",14)
 
 
 class AppUI(tk.Tk):
@@ -35,6 +42,12 @@ class AppUI(tk.Tk):
 class PageStructure(tk.Frame):
     def __init__(self,parent,controller):
         tk.Frame.__init__(self,parent)
+        self.state = True
+        self.camera = PiCamera()
+
+        #Camera Setup - re-initialise on page load
+        self.camera.resolution = (1200,1200)
+        self.camera.framerate = 30
 
         self.configure(bg="grey70")
 
@@ -42,7 +55,7 @@ class PageStructure(tk.Frame):
         screen_height = self.winfo_screenheight()
 
         # Main functional area
-        leftFrame = Frame(self,width=(screen_width/4*3), height=screen_height,bg="red")
+        leftFrame = Frame(self,width=(screen_width/4*3 - 20), height=screen_height,bg="red")
         leftFrame.pack(side=LEFT,padx=5,pady=10)
 
         # Button Area
@@ -54,26 +67,27 @@ class PageStructure(tk.Frame):
 
         photo = PhotoImage(file = "button.png")
 
-        history = Button(rightFrame,text="History",image=photo,
-        command = lambda : print("History"))
+        history = Button(rightFrame,text="History",width=100,height=100,
+                         command = lambda : self.photoPreview())
         history.grid(row=0,column=0,padx=5,pady=4)
-        history.image = photo
-        history.configure(width=250,height=250)
+        #history.image = photo
+        #history.configure(width=250,height=250)
 
 
-        language = Button(rightFrame,text="Change Language",image=photo,
-        command = lambda : print("Change Language"))
-        language.image = photo
+        language = Button(rightFrame,text="Change Language",width=100,height=100,
+                          command = lambda : print("Change Language"))
+        #language.image = photo
         language.grid(row=1,column=0,padx=5,pady=4)
 
-        takePhoto = Button(rightFrame,text="Take photo",image=photo,
-        command = lambda : print("Take photo"))
-        takePhoto.image = photo
+        takePhoto = Button(rightFrame,text="Take photo",width=100,height=100,
+                           command = lambda : self.takePhoto())
+        #takePhoto.image = photo
         takePhoto.grid(row=2,column=0,padx=5,pady=4)
         # print(takePhoto.winfo_width())
 
-        closeApp = Button(rightFrame,text="Quit",image=photo,command=self.quit)
-        closeApp.image = photo
+        closeApp = Button(rightFrame,text="Quit",width=100,height=100,
+                          command= lambda : self.exitProgram())
+        #closeApp.image = photo
         closeApp.grid(row=3,column=0,padx=5,pady=4)
 
         buttonList = [history,language,takePhoto,closeApp]
@@ -82,6 +96,31 @@ class PageStructure(tk.Frame):
             rightFrame.grid_columnconfigure(counter,weight=1)
             rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
+
+
+    def exitProgram(self):
+        self.destroy()
+        exit()
+
+    #Preview Method needed to display the camera - overlaps 'leftFrame' as picamera has higher priority for display
+    def photoPreview(self):
+        # return
+        if self.state:
+            print("on")
+            self.camera.start_preview(fullscreen=False,window=(5,10,580,580))
+        else:
+            print("off")
+            self.camera.stop_preview()
+        self.state = not self.state
+
+    def takePhoto(self):
+        # Takes a photo the moment the button is pressed
+        # Stores it in format : dd-mm-yyyy-HH-MM-SS.jpg
+        date = datetime.datetime.now()
+        file_ver = str(date.strftime("%d") + "-" + date.strftime("%m") + "-" + date.strftime("%Y") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
+        file_ver = "../images/"+ file_ver + ".jpg"
+        self.camera.capture(file_ver)
+
 
 
 app = AppUI()
