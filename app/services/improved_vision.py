@@ -163,26 +163,73 @@ class VisionEntry():
 
         self.translation_func("bg")
 
+        for x in range(len(self.TranslatedObj.field)):
+            temp_block_text = "block_data_" + str(x+1) + ":\n"
+            for y in range(len(self.TranslatedObj.field[x].field)):
+                print(self.pageObj.field[x].field[y].field)
+                print(self.TranslatedObj.field[x].field[y].field)
+                print("#---------------------------------------")
+        print("##-----------------------------------------------------------------------")
+
+        xd_dict = {}
+        for x in range(len(self.TranslatedObj.field)):
+            para_li = []
+            for y in range(len(self.TranslatedObj.field[x].field)):
+                if (self.TranslatedObj.field[x].field[y].valid):
+                    para_li.append({
+                    "original_text": self.TranslatedObj.field[x].field[y].field,
+                    "translated_text": self.pageObj.field[x].field[y].field,
+                    })
+                else:
+                    para_li.append({
+                    "original_text": self.TranslatedObj.field[x].field[y].field,
+                    "translated_text": "Invalid Translation #000044",
+                    })
+
+            xd_dict[f"block{x}"] = para_li
+
+        json_str = json.dumps(xd_dict, indent=4,ensure_ascii=False)
+        print(json_str)
+        with open("../text_data/test.json",'w', encoding="utf-8") as outfile:
+            outfile.write(json_str)
+
+
+
+        # for i, b in enumerate(self.pageObj.field):
+        #     para_li = []
+        #     for p in b.field:
+        #         para_li.append({
+        #             "og": p.field,
+        #             "trans": p.valid,
+        #         })
+        #     xd_dict[f"block{i}"] = para_li
+        #
+        # print(json.dumps(xd_dict, indent=4))
+
+
+        '''
+        file version code
+        '''
         # Sample code to save the page object to a file
-        file_ver = "../text_data/test" + ".txt"
-        try:
-            f = open(file_ver,"w", encoding="utf-8")
-
-            for x in range(len(self.TranslatedObj.field)):
-                temp_block_text = "block_data_" + str(x+1) + ":\n"
-                for y in range(len(self.TranslatedObj.field[x].field)):
-
-                    if (self.TranslatedObj.field[x]).field[y].valid:
-                        temp_block_text += ("\t-translated_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
-                        temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.pageObj.field[x].field[y].field) + "\n")
-
-                    else:
-                        temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
-
-                f.write(temp_block_text)
-
-        except IOError:
-            print(file_ver + " - Not found")
+        # file_ver = "../text_data/test" + ".txt"
+        # try:
+        #     f = open(file_ver,"w", encoding="utf-8")
+        #
+        #     for x in range(len(self.TranslatedObj.field)):
+        #         temp_block_text = "block_data_" + str(x+1) + ":\n"
+        #         for y in range(len(self.TranslatedObj.field[x].field)):
+        #
+        #             if (self.TranslatedObj.field[x]).field[y].valid:
+        #                 temp_block_text += ("\t-translated_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
+        #                 temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.pageObj.field[x].field[y].field) + "\n")
+        #
+        #             else:
+        #                 temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
+        #
+        #         f.write(temp_block_text)
+        #
+        # except IOError:
+        #     print(file_ver + " - Not found")
 
             # Original method to writting to a file - used as an example
             # for each in self.TranslatedObj.field:
