@@ -22,14 +22,11 @@ class VisionEntry():
     def __init__(self,source):
         self.source = source
         self.out_img = ""
+        self.out_text = ""
         self.pageObj = Page([])
         self.TranslatedObj = Page([])
         self.bounds_para = []
         self.bounds_block = []
-
-
-    def set_out(self,fileout):
-        self.out_img = fileout
 
 
     def draw_boxes(self,image,bounds,color):
@@ -53,8 +50,9 @@ class VisionEntry():
                 color,
             )
 
-        if self.out_img != 0:
-            image.save(self.out_img)
+        correct_ver = '../images_bound/' + self.out_img
+        if correct_ver != 0:
+            image.save(correct_ver)
         else:
             image.show()
 
@@ -152,63 +150,61 @@ class VisionEntry():
 
             self.TranslatedObj.add_item(trans_block_Obj)
 
+
+    def trim_input_data(self):
+        self.out_img = self.source.replace('old ','').replace('images','')
+        self.out_img = self.out_img.replace('..','').replace('/','').replace('\\','')
+
+
+
+    def alter_output(self):
+        self.out_text = self.out_img.replace('.jpg', '').replace('.png', '')
+        # print(self.out_text)
+        self.out_text = '../text_data/' + self.out_text + '.json'
+        # print(self.out_text)
+
+
     # Default main function for vision class that does all background operations
     # Any API calls and any file handling is managed in this class so all actions proceed through this system.
     # Will need patches when file loading is introduced unless a new format is introduced
     def vision_op(self):
         image2 = Image.open(self.source)
+        self.trim_input_data()
         self.vision_act()
         self.draw_boxes(image2,self.bounds_block,"blue")
         self.draw_boxes(image2,self.bounds_para,"red")
 
         self.translation_func("bg")
+        self.alter_output()
 
-        # Sample code to save the page object to a file
-        file_ver = "../text_data/test" + ".txt"
-        try:
-            f = open(file_ver,"w", encoding="utf-8")
+        xd_dict = {}
+        for x in range(len(self.TranslatedObj.field)):
+            para_li = []
+            for y in range(len(self.TranslatedObj.field[x].field)):
+                if (self.TranslatedObj.field[x].field[y].valid):
+                    para_li.append({
+                    "original_text": self.TranslatedObj.field[x].field[y].field,
+                    "translated_text": self.pageObj.field[x].field[y].field,
+                    })
+                else:
+                    para_li.append({
+                    "original_text": self.TranslatedObj.field[x].field[y].field,
+                    "translated_text": "Invalid Translation #000044",
+                    })
 
-            for x in range(len(self.TranslatedObj.field)):
-                temp_block_text = "block_data_" + str(x+1) + ":\n"
-                for y in range(len(self.TranslatedObj.field[x].field)):
+            xd_dict[f"block{x}"] = para_li
 
-                    if (self.TranslatedObj.field[x]).field[y].valid:
-                        temp_block_text += ("\t-translated_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
-                        temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.pageObj.field[x].field[y].field) + "\n")
+        json_str = json.dumps(xd_dict, indent=4,ensure_ascii=False)
+        # print(json_str)
 
-                    else:
-                        temp_block_text += ("\t-original_text_" + str(y+1) + ": " + str(self.TranslatedObj.field[x].field[y].field) + "\n")
-
-                f.write(temp_block_text)
-
-        except IOError:
-            print(file_ver + " - Not found")
-
-            # Original method to writting to a file - used as an example
-            # for each in self.TranslatedObj.field:
-            #     temp_block_text = "block_data_" + str(block_counter) + ":\n"
-            #     para_counter = 1
-            #     # print("#------------------------------------#")
-            #     for paragraphs_i in each.field:
-            #         # print(paragraphs_i.field)
-            #         if paragraphs_i.valid:
-            #             temp_block_text += ("\t-paragraph_text_" + str(para_counter) + ": " + str(paragraphs_i.field) + "\n")
-            #         temp_block_text += ("\t-paragraph_text_" + str(para_counter) + ": " + str(paragraphs_i.field) + "\n")
-            #         temp_block_text += ("\t-paragraph_state_" + str(para_counter) + ": " + str(paragraphs_i.valid) + "\n")
-            #         para_counter += 1
-            #     block_counter += 1
-            #     # print(temp_block_text)
-            #     f.write(temp_block_text)
-
+        with open(self.out_text,'w', encoding="utf-8") as outfile:
+            outfile.write(json_str)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("detect_file", help="The image for text detection")
-    parser.add_argument("-out_file", help="Optimal output file",default=0)
+    parser.add_argument("detect_file",help="The image for text detection")
     args = parser.parse_args()
 
     vision_C = VisionEntry(args.detect_file)
-    vision_C.set_out(args.out_file)
     vision_C.vision_op()
-    #render_doc_text(args.detect_file, args.out_file)
