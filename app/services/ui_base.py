@@ -56,7 +56,6 @@ class AppUI(tk.Tk):
         frame.tkraise()
 
 
-
 class MainPage(tk.Frame):
     def __init__(self,parent,controller):
         tk.Frame.__init__(self,parent)
@@ -257,26 +256,26 @@ class TranslationPage(tk.Frame):
 
         ''' RIGHT SIDE '''
         # View Image
-        history = Button(rightFrame,text="History",width=100,height=100, command = lambda : self.photoPreview())
-        history.grid(row=0,column=0,padx=5,pady=4)
+        view_img_btn = Button(rightFrame,text="View Image",width=100,height=100, command = lambda : print("Image Preview"))
+        view_img_btn.grid(row=0,column=0,padx=5,pady=4)
 
         # View Translation
-        # history = Button(rightFrame,text="History",width=100,height=100, command = lambda : self.photoPreview())
-        # history.grid(row=0,column=0,padx=5,pady=4)
-
-        # Delete Save
-        language = Button(rightFrame,text="Change Language",width=100,height=100, command = lambda : print("Change Language"))
-        language.grid(row=1,column=0,padx=5,pady=4)
+        view_translation_btn = Button(rightFrame,text="View Translation",width=100,height=100, command = lambda : print("Translate"))
+        view_translation_btn.grid(row=1,column=0,padx=5,pady=4)
 
         # Device Settings
-        takePhoto = Button(rightFrame,text="Take photo",width=100,height=100, command = lambda : self.takePhoto())
-        takePhoto.grid(row=2,column=0,padx=5,pady=4)
+        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : controller.show_frame("SettingsPage"))
+        settings_btn.grid(row=2,column=0,padx=5,pady=4)
 
-        # Back To Main screen
-        closeApp = Button(rightFrame,text="Quit",width=100,height=100, command= lambda : self.exitProgram())
-        closeApp.grid(row=3,column=0,padx=5,pady=4)
+        # Back to history
+        history_btn = Button(rightFrame,text="History",width=100,height=100, command= lambda : controller.show_frame("HistoryPage"))
+        history_btn.grid(row=3,column=0,padx=5,pady=4)
 
-        buttonList = [history,language,takePhoto,closeApp]
+        # Back to Main Page
+        main_page_btn = Button(rightFrame,text="New Photo",width=100,height=100, command = lambda : controller.show_frame("MainPage"))
+        main_page_btn.grid(row=4,column=0,padx=5,pady=4)
+
+        buttonList = [view_img_btn,view_translation_btn,settings_btn,history_btn,main_page_btn]
         counter = 0
         for x in buttonList:
             rightFrame.grid_columnconfigure(counter,weight=1)
@@ -291,7 +290,17 @@ class TranslationPage(tk.Frame):
 class SettingsPage(tk.Frame):
     def __init__(self,parent,controller):
         tk.Frame.__init__(self,parent)
+        self.configure(bg='grey70')
 
+        leftFrame = Frame(self,width=(800/4*3 ), height=600,bg="red")
+        leftFrame.pack(side=LEFT,padx=5,pady=10)
+
+        rightFrame = Frame(self,width=(800/4 ), height=600,bg="blue")
+        rightFrame.pack(side=RIGHT,padx=5,pady=10)
+
+        rightFrame.grid_propagate(False)
+        leftFrame.grid_propagate(False)
+        
     def exitProgram(self):
         self.destroy()
         exit()
