@@ -156,7 +156,6 @@ class VisionEntry():
         self.out_img = self.out_img.replace('..','').replace('/','').replace('\\','')
 
 
-
     def alter_output(self):
         self.out_text = self.out_img.replace('.jpg', '').replace('.png', '')
         # print(self.out_text)
@@ -183,12 +182,12 @@ class VisionEntry():
             for y in range(len(self.TranslatedObj.field[x].field)):
                 if (self.TranslatedObj.field[x].field[y].valid):
                     para_li.append({
-                    "original_text": self.TranslatedObj.field[x].field[y].field,
-                    "translated_text": self.pageObj.field[x].field[y].field,
+                    "original_text": self.pageObj.field[x].field[y].field,
+                    "translated_text": self.TranslatedObj.field[x].field[y].field,
                     })
                 else:
                     para_li.append({
-                    "original_text": self.TranslatedObj.field[x].field[y].field,
+                    "original_text": self.pageObj.field[x].field[y].field,
                     "translated_text": "Invalid Translation #000044",
                     })
 
