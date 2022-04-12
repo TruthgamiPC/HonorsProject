@@ -8,6 +8,7 @@ from PIL import ImageTk, Image
 from time import sleep
 
 from file_reading import ReadingFiles
+from vision_translate import HistoryPage, TranslationPage
 
 import datetime
 
@@ -22,12 +23,11 @@ class AppUI(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self,*args,**kwargs)
         # tk.Tk.attributes(self,'-fullscreen',True)
-        # tk.geometry("800x600")
 
         tk.Tk.wm_title(self,'Translator')
+        self.selected_img = ""
 
         window = tk.Frame(self)
-
         window.pack(side="top", fill="both", expand=True)
         window.grid_rowconfigure(0, weight=1,uniform=1)
         window.grid_columnconfigure(0, weight=1,uniform=1)
@@ -38,17 +38,23 @@ class AppUI(tk.Tk):
             frame = F(parent=window, controller=self)
             self.frames[page_name] = frame
 
-            # put all of the pages in the same location;
-            # the one on the top of the stacking order
-            # will be the one that is visible.
+            # put all of the pages in the same location the one on the top of the stacking order will be the one that is visible.
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("MainPage")
 
-        # frame = HistoryPage(window,self)
-        # self.frames[HistoryPage] = frame
-        # frame.grid(row=0, column=0, sticky="nsew")
-        # self.show_frame(HistoryPage)
+    def update_select(self,img_name):
+        self.selected_img = img_name
+        self.update_translate()
+        self.update_history()
+
+    def update_translate(self):
+        frame = self.frames["TranslationPage"]
+        frame.focus(self.selected_img)
+
+    def update_history(self):
+        frame = self.frames["HistoryPage"]
+        frame.change_img(self.selected_img)
 
     def show_frame(self, page_name):
         '''Show a frame for the given page name'''
@@ -67,6 +73,7 @@ class MainPage(tk.Frame):
         # self.camera.framerate = 30
 
         self.configure(bg="grey70")
+        self.controller = controller
 
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -130,180 +137,58 @@ class MainPage(tk.Frame):
         print(file_ver)
         # self.camera.capture(file_ver)
 
-class HistoryPage(tk.Frame):
-    def __init__(self,parent,controller):
-        tk.Frame.__init__(self,parent)
-        self.state = True
-        self.curr_img_path = ''
-
-        self.configure(bg='grey70')
-
-        # Main functional area
-        leftFrame = Frame(self,width=(800/4*3 ), height=600,bg="red")
-        leftFrame.pack(side=LEFT,padx=5,pady=10)
-
-        rightFrame = Frame(self,width=(800/4 ), height=600,bg="blue")
-        rightFrame.pack(side=RIGHT,padx=5,pady=10)
-
-        rightFrame.grid_propagate(False)
-        leftFrame.grid_propagate(False)
-
-
-        '''LEFT SIDE'''
-        # Displaying A list of all files, possibly with image by side
-        # ReadingFiles Class
-        self.fileReading = ReadingFiles()
-
-        # List boxes
-        self.imagesList = Listbox(leftFrame,font="Arial 19",bd=5,height=21,width=22)
-        self.imagesList.grid(row=0, column=0,padx=5,pady=50)
-
-        # Bind The Listbox
-        self.imagesList.bind("<<ListboxSelect>>", lambda x: self.change_img())
-
-        # img = PhotoImage(file="../images_bound/"+fileReading.image_files[0])
-        # img = ImageTk.PhotoImage(Image.open("../images_bound/" + fileReading.image_files[0]))
-        # print("../images_bound/" + self.fileReading.image_files[0])
-
-        img= (Image.open("../images_bound/" + self.fileReading.image_files[0]))
-        resized_image= img.resize((300,300), Image.ANTIALIAS)
-        new_image= ImageTk.PhotoImage(resized_image)
-
-        self.img_label = Label(leftFrame, image = new_image)
-        self.img_label.image = new_image
-        self.img_label.grid(row=0, column=1,padx=5,pady=50)
-
-        objList = [self.imagesList,self.img_label]
-
-        leftFrame.grid_columnconfigure(0,weight=1)
-        leftFrame.grid_columnconfigure(1,weight=1)
-        leftFrame.grid_rowconfigure(0,weight=1)
-        leftFrame.grid_rowconfigure(1,weight=1)
-
-        # add items to list1
-        for item in self.fileReading.image_files:
-        	self.imagesList.insert(END, item)
-
-
-        ''' RIGHT SIDE '''
-        # Open Translation
-        translation_btn = Button(rightFrame,text="View Translation",width=100,height=100, command = lambda : controller.show_frame("TranslationPage"))
-        translation_btn.grid(row=0,column=0,padx=5,pady=4)
-
-        # Delete Save
-        delete_btn = Button(rightFrame,text="Delete Save",width=100,height=100, command = lambda : print("wow"))
-        delete_btn.grid(row=1,column=0,padx=5,pady=4)
-
-        # Device Settings
-        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : controller.show_frame("SettingsPage"))
-        settings_btn.grid(row=2,column=0,padx=5,pady=4)
-
-        # Back To Main screen
-        closeApp = Button(rightFrame,text="Quit",width=100,height=100, command= lambda : self.exitProgram())
-        closeApp.grid(row=3,column=0,padx=5,pady=4)
-
-        buttonList = [translation_btn,delete_btn,settings_btn,closeApp]
-        counter = 0
-        for x in buttonList:
-            rightFrame.grid_columnconfigure(counter,weight=1)
-            rightFrame.grid_rowconfigure(counter,weight=1)
-            counter += 1
-
-    def change_img(self, *args):
-        for each in self.fileReading.image_files:
-            # print(each)
-            if self.imagesList.get(ANCHOR) == each:
-                print("Wow its the: " + each)
-                self.curr_img_path = "../images_bound/" + each
-                self.update_img()
-            else:
-                continue
-
-    def update_img(self):
-        # Use Selected image
-        img = (Image.open(self.curr_img_path))
-
-        resized_image= img.resize((300,300), Image.ANTIALIAS)
-        new_image= ImageTk.PhotoImage(resized_image)
-
-        self.img_label.configure(image = new_image)
-        self.img_label.image = new_image
-
-    def exitProgram(self):
-        self.destroy()
-        exit()
-
-class TranslationPage(tk.Frame):
-    def __init__(self,parent,controller):
-        tk.Frame.__init__(self,parent)
-        self.configure(bg='grey70')
-
-        leftFrame = Frame(self,width=(800/4*3 ), height=600,bg="red")
-        leftFrame.pack(side=LEFT,padx=5,pady=10)
-
-        rightFrame = Frame(self,width=(800/4 ), height=600,bg="blue")
-        rightFrame.pack(side=RIGHT,padx=5,pady=10)
-
-        rightFrame.grid_propagate(False)
-        leftFrame.grid_propagate(False)
-
-        '''LEFT SIDE'''
-        # Swap between 2 text boxes and the image
-
-        # Translation version - Text Boxes - File_reading version
-
-        # Image version - Full Dispaly og screen size Image
-
-        ''' RIGHT SIDE '''
-        # View Image
-        view_img_btn = Button(rightFrame,text="View Image",width=100,height=100, command = lambda : print("Image Preview"))
-        view_img_btn.grid(row=0,column=0,padx=5,pady=4)
-
-        # View Translation
-        view_translation_btn = Button(rightFrame,text="View Translation",width=100,height=100, command = lambda : print("Translate"))
-        view_translation_btn.grid(row=1,column=0,padx=5,pady=4)
-
-        # Device Settings
-        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : controller.show_frame("SettingsPage"))
-        settings_btn.grid(row=2,column=0,padx=5,pady=4)
-
-        # Back to history
-        history_btn = Button(rightFrame,text="History",width=100,height=100, command= lambda : controller.show_frame("HistoryPage"))
-        history_btn.grid(row=3,column=0,padx=5,pady=4)
-
-        # Back to Main Page
-        main_page_btn = Button(rightFrame,text="New Photo",width=100,height=100, command = lambda : controller.show_frame("MainPage"))
-        main_page_btn.grid(row=4,column=0,padx=5,pady=4)
-
-        buttonList = [view_img_btn,view_translation_btn,settings_btn,history_btn,main_page_btn]
-        counter = 0
-        for x in buttonList:
-            rightFrame.grid_columnconfigure(counter,weight=1)
-            rightFrame.grid_rowconfigure(counter,weight=1)
-            counter += 1
-
-
-    def exitProgram(self):
-        self.destroy()
-        exit()
-
 class SettingsPage(tk.Frame):
     def __init__(self,parent,controller):
         tk.Frame.__init__(self,parent)
         self.configure(bg='grey70')
+        self.controller = controller
 
-        leftFrame = Frame(self,width=(800/4*3 ), height=600,bg="red")
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        leftFrame = Frame(self,width=(screen_width/4*3 - 400), height=screen_height-200,bg="red")
         leftFrame.pack(side=LEFT,padx=5,pady=10)
 
-        rightFrame = Frame(self,width=(800/4 ), height=600,bg="blue")
+        # Button Area
+        rightFrame = Frame(self,width=(screen_width/4 - 100), height=screen_height-200,bg="blue")
         rightFrame.pack(side=RIGHT,padx=5,pady=10)
 
         rightFrame.grid_propagate(False)
         leftFrame.grid_propagate(False)
-        
+
+        ''' RIGHT SIDE '''
+        # View Image
+        # view_img_btn = Button(rightFrame,text="View Image",width=100,height=100, command = lambda : print("Image Preview"))
+        # view_img_btn.grid(row=0,column=0,padx=5,pady=4)
+
+        # View Translation
+        # view_translation_btn = Button(rightFrame,text="View Translation",width=100,height=100, command = lambda : print("Translate"))
+        # view_translation_btn.grid(row=1,column=0,padx=5,pady=4)
+
+        # Device Settings
+        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : controller.show_frame("SettingsPage"))
+        settings_btn.grid(row=0,column=0,padx=5,pady=4)
+
+        # Back to history
+        history_btn = Button(rightFrame,text="History",width=100,height=100, command= lambda : controller.show_frame("HistoryPage"))
+        history_btn.grid(row=1,column=0,padx=5,pady=4)
+
+        # Back to Main Page
+        main_page_btn = Button(rightFrame,text="New Photo",width=100,height=100, command = lambda : controller.show_frame("MainPage"))
+        main_page_btn.grid(row=2,column=0,padx=5,pady=4)
+
+        buttonList = [settings_btn,history_btn,main_page_btn]
+        counter = 0
+        for x in buttonList:
+            rightFrame.grid_columnconfigure(counter,weight=1)
+            rightFrame.grid_rowconfigure(counter,weight=1)
+            counter += 1
+
+
     def exitProgram(self):
         self.destroy()
         exit()
+
 
 app = AppUI()
 app.mainloop()
