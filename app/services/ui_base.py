@@ -26,6 +26,7 @@ class AppUI(tk.Tk):
 
         tk.Tk.wm_title(self,'Translator')
         self.selected_img = ""
+        self.fileReading = ReadingFiles()
 
         window = tk.Frame(self)
         window.pack(side="top", fill="both", expand=True)
@@ -43,14 +44,18 @@ class AppUI(tk.Tk):
 
         self.show_frame("MainPage")
 
+    def recive_selected_img(self):
+        return self.selected_img
+
     def update_select(self,img_name):
         self.selected_img = img_name
         self.update_translate()
         self.update_history()
 
+
     def update_translate(self):
         frame = self.frames["TranslationPage"]
-        frame.focus(self.selected_img)
+        frame.change_img(self.selected_img)
 
     def update_history(self):
         frame = self.frames["HistoryPage"]
@@ -71,6 +76,7 @@ class MainPage(tk.Frame):
         #Camera Setup - re-initialise on page load
         # self.camera.resolution = (1200,1200)
         # self.camera.framerate = 30
+        # self.camera.rotation = 90
 
         self.configure(bg="grey70")
         self.controller = controller
@@ -91,21 +97,21 @@ class MainPage(tk.Frame):
 
         # photo = PhotoImage(file = "button.png")
 
-        history_btn = Button(rightFrame,text="History",width=100,height=100, command = lambda : controller.show_frame("HistoryPage"))
+        history_btn = Button(rightFrame,text="History",width=100,height=88, command = lambda : self.transition_func("HistoryPage"))
         history_btn.grid(row=0,column=0,padx=5,pady=4)
 
-
-        settings_btn = Button(rightFrame,text="Change Language",width=100,height=100, command = lambda : controller.show_frame("SettingsPage"))
+        settings_btn = Button(rightFrame,text="Change Language",width=100,height=88, command = lambda : self.transition_func("SettingsPage"))
         settings_btn.grid(row=1,column=0,padx=5,pady=4)
 
+        self.view_translation_btn = Button(rightFrame,text="View Translation",width=100,height=88, command= lambda : self.transition_func("TranslationPage"))
+        self.view_translation_btn.grid(row=2,column=0,padx=5,pady=4)
+
         takePhoto_btn = Button(rightFrame,text="Take photo",width=100,height=100, command = lambda : self.takePhoto())
-        takePhoto_btn.grid(row=2,column=0,padx=5,pady=4)
+        takePhoto_btn.grid(row=3,column=0,padx=5,pady=4)
 
-        closeApp = Button(rightFrame,text="Quit",width=100,height=100, command= lambda : self.exitProgram())
-        #closeApp.image = photo
-        closeApp.grid(row=3,column=0,padx=5,pady=4)
+        self.view_translation_btn.configure(state = DISABLED)
 
-        buttonList = [history_btn,settings_btn,takePhoto_btn,closeApp]
+        buttonList = [history_btn,settings_btn,takePhoto_btn,self.view_translation_btn]
         counter = 0
         for x in buttonList:
             rightFrame.grid_columnconfigure(counter,weight=1)
@@ -135,7 +141,14 @@ class MainPage(tk.Frame):
         file_ver = str(date.strftime("%d") + "-" + date.strftime("%m") + "-" + date.strftime("%Y") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
         file_ver = "../images/"+ file_ver + ".jpg"
         print(file_ver)
+        self.view_translation_btn.configure(state = NORMAL)
         # self.camera.capture(file_ver)
+
+    def transition_func(self,directory):
+        # Default type of function to transition in between frames
+        # Used to allow for page updates from a lambda command call
+        self.view_translation_btn.configure(state = DISABLED)
+        self.controller.show_frame(directory)
 
 class SettingsPage(tk.Frame):
     def __init__(self,parent,controller):
@@ -166,15 +179,15 @@ class SettingsPage(tk.Frame):
         # view_translation_btn.grid(row=1,column=0,padx=5,pady=4)
 
         # Device Settings
-        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : controller.show_frame("SettingsPage"))
+        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : self.transition_func("SettingsPage"))
         settings_btn.grid(row=0,column=0,padx=5,pady=4)
 
         # Back to history
-        history_btn = Button(rightFrame,text="History",width=100,height=100, command= lambda : controller.show_frame("HistoryPage"))
+        history_btn = Button(rightFrame,text="History",width=100,height=100, command= lambda : self.transition_func("HistoryPage"))
         history_btn.grid(row=1,column=0,padx=5,pady=4)
 
         # Back to Main Page
-        main_page_btn = Button(rightFrame,text="New Photo",width=100,height=100, command = lambda : controller.show_frame("MainPage"))
+        main_page_btn = Button(rightFrame,text="New Photo",width=100,height=100, command = lambda : self.transition_func("MainPage"))
         main_page_btn.grid(row=2,column=0,padx=5,pady=4)
 
         buttonList = [settings_btn,history_btn,main_page_btn]
@@ -185,9 +198,10 @@ class SettingsPage(tk.Frame):
             counter += 1
 
 
-    def exitProgram(self):
-        self.destroy()
-        exit()
+    def transition_func(self,directory):
+        # Default type of function to transition in between frames
+        # Used to allow for page updates from a lambda command call
+        self.controller.show_frame(directory)
 
 
 app = AppUI()
