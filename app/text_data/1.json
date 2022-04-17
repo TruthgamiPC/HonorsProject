@@ -1,0 +1,38 @@
+{
+    "block0": [
+        {
+            "original_text": "This is some very awesome text that holds no informational value whatsoever . ",
+            "translated_text": "Това е много страхотен текст, който няма никаква информационна стойност."
+        }
+    ],
+    "block1": [
+        {
+            "original_text": "Thank you for reading it nonetheless . Means a lot ! ",
+            "translated_text": "Благодаря ви, че го прочетохте все пак. Означава много !"
+        }
+    ],
+    "block2": [
+        {
+            "original_text": "Anyways Have A Good Day , ",
+            "translated_text": "Все пак приятен ден,"
+        }
+    ],
+    "block3": [
+        {
+            "original_text": "Anyways have a good day . ! ",
+            "translated_text": "Все пак добър ден. !"
+        }
+    ],
+    "block4": [
+        {
+            "original_text": "Anyways Have A Good Day , ",
+            "translated_text": "Все пак приятен ден,"
+        }
+    ],
+    "block5": [
+        {
+            "original_text": "Anyways have a good day . ! ",
+            "translated_text": "Все пак добър ден. !"
+        }
+    ]
+}

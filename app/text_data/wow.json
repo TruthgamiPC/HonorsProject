@@ -1,0 +1,20 @@
+{
+    "block0": [
+        {
+            "original_text": "This is realling wowing text ",
+            "translated_text": "Това е наистина удивителен текст"
+        }
+    ],
+    "block1": [
+        {
+            "original_text": "Wow ",
+            "translated_text": "Еха"
+        }
+    ],
+    "block2": [
+        {
+            "original_text": "Very cool ",
+            "translated_text": "Много яко"
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 import os
 import io
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'turnkey-wording-338516-45d2d1f4d5ca.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'flawless-parity-343711-7c796736ffff.json'
 
 def translate_text(target, text):
     """Translates text into the target language.
