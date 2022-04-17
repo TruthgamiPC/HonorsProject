@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
+from tkinter import font as tkFont
 
 from PIL import ImageTk, Image
 
@@ -13,6 +14,37 @@ import datetime
 
 import os
 import io
+
+# Source Github - https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
+class ScrollFrame(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        self.canvas = tk.Canvas(self, width=(screen_width/4*3-425), height=screen_height-200,  borderwidth=0, background="#ffffff")          #place canvas on self
+        self.viewPort = tk.Frame(self.canvas, background="#ffffff")
+        self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.vsb.set)
+
+        self.vsb.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas_window = self.canvas.create_window((4,4), window=self.viewPort, anchor="nw", tags="self.viewPort")
+
+        self.viewPort.bind("<Configure>", self.onFrameConfigure)
+        self.canvas.bind("<Configure>", self.onCanvasConfigure)
+
+        self.onFrameConfigure(None)
+
+    def onFrameConfigure(self, event):
+        '''Reset the scroll region to encompass the inner frame'''
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))                 #whenever the size of the frame changes, alter the scroll region respectively.
+
+    def onCanvasConfigure(self, event):
+        '''Reset the canvas window to encompass inner frame when required'''
+        canvas_width = event.width
+        self.canvas.itemconfig(self.canvas_window, width = canvas_width)            #whenever the size of the canvas changes alter the window region respectively.
 
 
 class HistoryPage(tk.Frame):
@@ -45,9 +77,19 @@ class HistoryPage(tk.Frame):
         # ReadingFiles Class
         self.controller.fileReading = ReadingFiles()
 
+        list_frame = Frame(leftFrame)
+        list_frame.grid(row=0,column=0)
+
+        list_scrollbar = Scrollbar(list_frame, orient="vertical")
+
         # List boxes
-        self.imagesList = Listbox(leftFrame,font="Arial 19",bd=5,height=21,width=22)
-        self.imagesList.grid(row=0, column=0,padx=5,pady=50)
+        self.imagesList = Listbox(list_frame,font="Arial 19", yscrollcommand= list_scrollbar.set ,bd=5,height=15,width=22)
+        # self.imagesList.grid(row=0, column=0,padx=5,pady=50)
+        self.imagesList.pack(side="left")
+
+        list_scrollbar.config(command = self.imagesList.yview)
+        # list_scrollbar.grid(row=0, column=1)
+        list_scrollbar.pack(side="right",fill="y")
 
         # Bind The Listbox
         self.imagesList.bind("<<ListboxSelect>>", lambda x: self.listbox_func())
@@ -63,7 +105,7 @@ class HistoryPage(tk.Frame):
 
         self.img_label = Label(leftFrame, image = new_image)
         self.img_label.image = new_image
-        self.img_label.grid(row=0, column=1,padx=5,pady=50)
+        self.img_label.grid(row=0, column=2,padx=5,pady=50)
 
         objList = [self.imagesList,self.img_label]
 
@@ -152,10 +194,17 @@ class HistoryPage(tk.Frame):
             else:
                 continue
 
+    def update_font(self):
+        loader = self.controller.settings_page.load_file()
+        tmp_font = tkFont.Font(family='Helvetica', size = loader.get('device_settings','font_size'))
+        # for each_ele in self.imagesList:
+        self.imagesList.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
+
     def update_frame(self):
         print("History Page Update")
 
         self.update_list()
+        self.update_font()
 
     def update_img(self):
         # Use Selected image
@@ -186,26 +235,20 @@ class TranslationPage(tk.Frame):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        self.leftFrame = Frame(self,width=(screen_width/4*3 - 400), height=screen_height-200,bg="red")
+        self.leftFrame = Frame(self, width=(screen_width/4*3-425), height=screen_height-200, bg="red")
         self.leftFrame.pack(side=LEFT,padx=5,pady=10)
 
+        self.ls_frame = ScrollFrame(self.leftFrame)
+        self.ls_frame.pack(side="top", fill="both", expand=True)
+
         # Button Area
-        rightFrame = Frame(self,width=(screen_width/4 - 100), height=screen_height-200,bg="blue")
+        rightFrame = Frame(self,width=(screen_width/4-100), height=screen_height-200,bg="blue")
         rightFrame.pack(side=RIGHT,padx=5,pady=10)
 
         rightFrame.grid_propagate(False)
         self.leftFrame.grid_propagate(False)
 
         '''LEFT SIDE'''
-        # Swap between 2 text boxes and the image
-
-        # Translation version - Text Boxes - File_reading version
-
-        # Image version - Full Dispaly og screen size Image
-        # img= (Image.open("../images_bound/" + self.controller.fileReading.image_files[0]))
-        # resized_image= img.resize((300,300), Image.ANTIALIAS)
-        # new_image= ImageTk.PhotoImage(resized_image)
-
         self.img_label = Label(self.leftFrame)
         self.img_label.grid(row=200, column=200,padx=5,pady=50)
 
@@ -243,8 +286,8 @@ class TranslationPage(tk.Frame):
 
         for num in range(0,len(loaded_json)):
             for n,each_seg in enumerate(loaded_json[f'block{num}']):
-                og_text = tk.Text(self.leftFrame,height=4,width=50)
-                trans_text = tk.Text(self.leftFrame,height=4,width=50)
+                og_text = tk.Text(self.ls_frame.viewPort,height=4,width=20)
+                trans_text = tk.Text(self.ls_frame.viewPort,height=4,width=20)
 
                 og_text.grid(column=0,row=(num+n),ipadx=25,ipady=5) # ,ipadx=25,ipady=5
                 trans_text.grid(column=1,row=(num+n),ipadx=25,ipady=5) # ipadx=25,ipady=5
@@ -258,8 +301,8 @@ class TranslationPage(tk.Frame):
                 self.list_of_text_objects.append(og_text)
                 self.list_of_text_objects.append(trans_text)
 
-                self.leftFrame.grid_columnconfigure(num,weight=1)
-                self.leftFrame.grid_rowconfigure(num,weight=1)
+                # self.leftFrame.grid_columnconfigure(num,weight=1)
+                # self.leftFrame.grid_rowconfigure(num,weight=1)
 
     def delete_page_data(self):
         for each_el in self.list_of_text_objects:
@@ -312,6 +355,12 @@ class TranslationPage(tk.Frame):
         # Used to allow for page updates from a lambda command call
         self.controller.show_frame(directory)
 
+    def update_font(self):
+        loader = self.controller.settings_page.load_file()
+        tmp_font = tkFont.Font(family='Helvetica', size = loader.get('device_settings','font_size'))
+        for each_ele in self.list_of_text_objects:
+            each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
+
     # Updates the frame on call
     def update_frame(self):
         # ensure list_of_text_objects is empty
@@ -322,3 +371,4 @@ class TranslationPage(tk.Frame):
         # reset the state to default one so always boots the same way
         self.state_display = True
         self.switch_display()
+        self.update_font()

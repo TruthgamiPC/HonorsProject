@@ -20,7 +20,7 @@ class ReadingFiles():
 
     def searchDir(self):
         self.image_files = os.listdir('../images_bound/')
-        print(self.image_files)
+        # print(self.image_files)
 
     def targeted_text(self,text_file):
         full_name = '../text_data/' + self.stripper(text_file) + '.json'

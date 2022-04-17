@@ -43,6 +43,7 @@ class AppUI(tk.Tk):
             # put all of the pages in the same location the one on the top of the stacking order will be the one that is visible.
             frame.grid(row=0, column=0, sticky="nsew")
 
+        self.settings_page = self.frames["SettingsPage"]
         self.show_frame("MainPage")
 
     def recive_selected_img(self):
@@ -276,9 +277,14 @@ class SettingsPage(tk.Frame):
         with open('setting.ini','w') as f:
             config.write(f)
 
-    def loading_settings(self):
+    def load_file(self):
         loader = ConfigParser()
         loader.read('setting.ini')
+
+        return loader
+
+    def loading_settings(self):
+        loader = self.load_file()
 
         self.selected_font_size.set(loader.get('device_settings','font_size'))
         self.selected_f_colour.set(loader.get('device_settings','text_colour'))
@@ -286,7 +292,7 @@ class SettingsPage(tk.Frame):
         self.selected_language.set(loader.get('device_settings','target_language'))
 
     def update_font_c(self):
-        self.font_text_box = tkFont.Font(family='Helvetica',size=self.selected_font_size.get())
+        self.font_text_box = tkFont.Font(family='Helvetica' ,size=self.selected_font_size.get())
 
         self.text_box.configure(font = self.font_text_box)
         self.text_box.configure(fg=self.selected_f_colour.get())
