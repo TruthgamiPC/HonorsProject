@@ -200,10 +200,10 @@ class VisionEntry():
             outfile.write(json_str)
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("detect_file",help="The image for text detection")
-    args = parser.parse_args()
-
-    vision_C = VisionEntry(args.detect_file)
-    vision_C.vision_op()
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("detect_file",help="The image for text detection")
+#     args = parser.parse_args()
+#
+#     vision_C = VisionEntry(args.detect_file)
+#     vision_C.vision_op()

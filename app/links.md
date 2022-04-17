@@ -24,3 +24,4 @@
 - Extra Translator API tutorial by pypi -> [https://pypi.org/project/googletrans/](https://pypi.org/project/googletrans/)
 - Base page to google translator APi (with useful links to all sub-parts) -> [https://cloud.google.com/translate/docs#docs](https://cloud.google.com/translate/docs#docs)
 - Python example from google on translation API -> [https://github.com/googleapis/python-translate/blob/HEAD/samples/snippets/snippets.py](https://github.com/googleapis/python-translate/blob/HEAD/samples/snippets/snippets.py)
+- Scrollbar Frame code - https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
