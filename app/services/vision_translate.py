@@ -23,7 +23,7 @@ class ScrollFrame(tk.Frame):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        self.canvas = tk.Canvas(self, width=(screen_width/4*3-425), height=screen_height-200,  borderwidth=0, background="#ffffff")          #place canvas on self
+        self.canvas = tk.Canvas(self, width=(screen_width/4*3), height=screen_height,  borderwidth=0, background="#ffffff")          #place canvas on self
         self.viewPort = tk.Frame(self.canvas, background="#ffffff")
         self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.vsb.set)
@@ -61,11 +61,11 @@ class HistoryPage(tk.Frame):
         screen_height = self.winfo_screenheight()
 
         # Main functional area
-        leftFrame = Frame(self,width=(screen_width/4*3 - 400), height=screen_height-200,bg="red")
+        leftFrame = Frame(self,width=(screen_width/4*3), height=screen_height,bg="red")
         leftFrame.pack(side=LEFT,padx=5,pady=10)
 
         # Button Area
-        rightFrame = Frame(self,width=(screen_width/4 - 100), height=screen_height-200,bg="blue")
+        rightFrame = Frame(self,width=(screen_width/4), height=screen_height,bg="blue")
         rightFrame.pack(side=RIGHT,padx=5,pady=10)
 
         rightFrame.grid_propagate(False)
@@ -235,14 +235,14 @@ class TranslationPage(tk.Frame):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        self.leftFrame = Frame(self, width=(screen_width/4*3-425), height=screen_height-200, bg="red")
+        self.leftFrame = Frame(self, width=(screen_width/4*3), height=screen_height, bg="red")
         self.leftFrame.pack(side=LEFT,padx=5,pady=10)
 
         self.ls_frame = ScrollFrame(self.leftFrame)
         self.ls_frame.pack(side="top", fill="both", expand=True)
 
         # Button Area
-        rightFrame = Frame(self,width=(screen_width/4-100), height=screen_height-200,bg="blue")
+        rightFrame = Frame(self,width=(screen_width/4), height=screen_height,bg="blue")
         rightFrame.pack(side=RIGHT,padx=5,pady=10)
 
         rightFrame.grid_propagate(False)

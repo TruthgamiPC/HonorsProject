@@ -5,7 +5,7 @@ from tkinter import font as tkFont
 
 from PIL import ImageTk, Image
 
-# from picamera import PiCamera
+from picamera import PiCamera
 from time import sleep
 
 from file_reading import ReadingFiles
@@ -23,7 +23,7 @@ class AppUI(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self,*args,**kwargs)
-        # tk.Tk.attributes(self,'-fullscreen',True)
+        tk.Tk.attributes(self,'-fullscreen',True)
 
         tk.Tk.wm_title(self,'Translator')
         self.selected_img = ""
@@ -74,12 +74,12 @@ class MainPage(tk.Frame):
     def __init__(self,parent,controller):
         tk.Frame.__init__(self,parent)
         self.state = True
-        # self.camera = PiCamera()
+        self.camera = PiCamera()
 
         #Camera Setup - re-initialise on page load
-        # self.camera.resolution = (1200,1200)
-        # self.camera.framerate = 30
-        # self.camera.rotation = 90
+        self.camera.resolution = (1200,1200)
+        self.camera.framerate = 30
+        self.camera.rotation = 90
 
         self.configure(bg="grey70")
         self.controller = controller
@@ -88,11 +88,11 @@ class MainPage(tk.Frame):
         screen_height = self.winfo_screenheight()
 
         # Main functional area
-        leftFrame = Frame(self,width=(screen_width/4*3 - 400), height=screen_height-200,bg="red")
+        leftFrame = Frame(self,width=(screen_width/4*3), height=screen_height, bg="red")
         leftFrame.pack(side=LEFT,padx=5,pady=10)
 
         # Button Area
-        rightFrame = Frame(self,width=(screen_width/4 - 100), height=screen_height-200,bg="blue")
+        rightFrame = Frame(self,width=(screen_width/4), height=screen_height, bg="blue")
         rightFrame.pack(side=RIGHT,padx=5,pady=10)
 
         rightFrame.grid_propagate(False)
@@ -121,19 +121,21 @@ class MainPage(tk.Frame):
             rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
+        # self.photoPreview()
+
     #Preview Method needed to display the camera - overlaps 'leftFrame' as picamera has higher priority for display
     def photoPreview(self):
         # return
         if self.state:
             print("on")
-            # self.camera.start_preview(fullscreen=False,window=(5,10,580,580))
+            self.camera.start_preview(fullscreen=False,window=(5,10,580,580))
         else:
             print("off")
-            # self.camera.stop_preview()
+            self.camera.stop_preview()
         self.state = not self.state
 
     def post_takePhoto(self,n_img_name):
-        # self.controller.selected_img = n_img_name
+        self.controller.selected_img = n_img_name
 
         vision_func = VisionEntry(n_img_name)
         vision_func.vision_op()
@@ -149,20 +151,22 @@ class MainPage(tk.Frame):
         # Takes a photo the moment the button is pressed
         # Stores it in format : dd-mm-yyyy-HH-MM-SS.jpg
         date = datetime.datetime.now()
-        # file_ver = str(date.strftime("%d") + "-" + date.strftime("%m") + "-" + date.strftime("%Y") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
-        file_ver = "3"
+        file_ver = str(date.strftime("%d") + "-" + date.strftime("%m") + "-" + date.strftime("%Y") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
+        # file_ver = "3"
         file_ver = "../images/"+ file_ver + ".png"
         print(file_ver)
-        # self.camera.capture(file_ver)
+        self.camera.capture(file_ver)
         self.post_takePhoto(file_ver)
 
     def transition_func(self,directory):
         # Default type of function to transition in between frames
         # Used to allow for page updates from a lambda command call
+        self.photoPreview()
         self.view_translation_btn.configure(state = DISABLED)
         self.controller.show_frame(directory)
 
     def update_frame(self):
+        self.photoPreview()
         print("Main Page Update")
 
 class SettingsPage(tk.Frame):
@@ -190,11 +194,11 @@ class SettingsPage(tk.Frame):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        leftFrame = Frame(self,width=(screen_width/4*3 - 400), height=screen_height-200,bg="red")
+        leftFrame = Frame(self,width=(screen_width/4*3), height=screen_height,bg="red")
         leftFrame.pack(side=LEFT,padx=5,pady=10)
 
         # Button Area
-        rightFrame = Frame(self,width=(screen_width/4 - 100), height=screen_height-200,bg="blue")
+        rightFrame = Frame(self,width=(screen_width/4), height=screen_height,bg="blue")
         rightFrame.pack(side=RIGHT,padx=5,pady=10)
 
         rightFrame.grid_propagate(False)
