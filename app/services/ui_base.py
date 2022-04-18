@@ -29,7 +29,7 @@ class AppUI(tk.Tk):
         tk.Tk.wm_title(self,'Translator')
         self.selected_img = ""
         self.fileReading = ReadingFiles()
-        self.button_font = tkFont.Font(family='Helvetica',size=30, )
+        self.button_font = tkFont.Font(family='Helvetica',size=16)
 
         window = tk.Frame(self)
         window.pack(side="top", fill="both", expand=True)
@@ -178,7 +178,7 @@ class SettingsPage(tk.Frame):
         self.settings_translate = translate.Client()
         self.target_lang = ""
         
-        font_options = [10,14,18,22,26,30]
+        font_options = [14,18,22,26,30]
         self.selected_font_size = StringVar(self)
 
         f_colour_options = ['Black','Red','Yellow','White']
@@ -325,18 +325,16 @@ class SettingsPage(tk.Frame):
         n_font_size = self.selected_font_size.get()
 
         for x in [self.og_text_box,self.trans_text_box]:
-            if int(n_font_size) == 10:
-                x.configure(width=64, height=(self.length_validaiton(int(len(x.get(1.0,END))), 64)))
-            elif int(n_font_size) == 14:
-                x.configure(width=41, height=(self.length_validaiton(int(len(x.get(1.0,END))), 41)))
-            elif int(n_font_size) == 18:
-                x.configure(width=34, height=(self.length_validaiton(int(len(x.get(1.0,END))), 34)))
-            elif int(n_font_size) == 22:
-                x.configure(width=28, height=(self.length_validaiton(int(len(x.get(1.0,END))), 28)))
-            elif int(n_font_size) == 26:
-                x.configure(width=23, height=(self.length_validaiton(int(len(x.get(1.0,END))), 23)))
-            elif int(n_font_size) == 30:
+            if int(n_font_size) == 14:
                 x.configure(width=20, height=(self.length_validaiton(int(len(x.get(1.0,END))), 20)))
+            elif int(n_font_size) == 18:
+                x.configure(width=17, height=(self.length_validaiton(int(len(x.get(1.0,END))), 17)))
+            elif int(n_font_size) == 22:
+                x.configure(width=14, height=(self.length_validaiton(int(len(x.get(1.0,END))), 14)))
+            elif int(n_font_size) == 26:
+                x.configure(width=12, height=(self.length_validaiton(int(len(x.get(1.0,END))), 12)))
+            elif int(n_font_size) == 30:
+                x.configure(width=10, height=(self.length_validaiton(int(len(x.get(1.0,END))), 10)))
 
         if self.selected_language.get() == "English":
             self.target_lang = "en"

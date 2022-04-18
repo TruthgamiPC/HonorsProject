@@ -125,7 +125,7 @@ class HistoryPage(tk.Frame):
         settings_btn.grid(row=0,column=0,padx=5,pady=4)
 
         # Back To Main screen
-        takePhoto_btn = Button(rightFrame,text="Take a New Photo", font = self.controller.button_font,width=100,height=100, command= lambda : self.transition_func("MainPage"))
+        takePhoto_btn = Button(rightFrame,text="Take a\nNew Photo", font = self.controller.button_font,width=100,height=100, command= lambda : self.transition_func("MainPage"))
         takePhoto_btn.grid(row=1,column=0,padx=5,pady=4)
 
         # Delete Save
@@ -133,7 +133,7 @@ class HistoryPage(tk.Frame):
         delete_btn.grid(row=2,column=0,padx=5,pady=4)
 
         # Open Translation
-        translation_btn = Button(rightFrame,text="View Translation", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("TranslationPage"))
+        translation_btn = Button(rightFrame,text="View\nTranslation", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("TranslationPage"))
         translation_btn.grid(row=3,column=0,padx=5,pady=4)
 
 
@@ -232,7 +232,7 @@ class TranslationPage(tk.Frame):
         self.state_display = True
         self.curr_img_path = ''
         self.list_of_text_objects = []
-        font_first = tkFont.Font(family='Helvetica',size=28)
+        font_first = tkFont.Font(family='Helvetica',size=20)
         
 
         screen_width = self.winfo_screenwidth()
@@ -272,7 +272,7 @@ class TranslationPage(tk.Frame):
         settings_btn.grid(row=0,column=0,padx=5,pady=4)
 
         # Back to Main Page
-        main_page_btn = Button(rightFrame,text="Take a New Photo", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("MainPage"))
+        main_page_btn = Button(rightFrame,text="Take a \nNew Photo", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("MainPage"))
         main_page_btn.grid(row=1,column=0,padx=5,pady=4)
 
         # Back to history
@@ -295,7 +295,7 @@ class TranslationPage(tk.Frame):
         loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())	
         loader = self.controller.settings_page.load_file()	
         language = loader.get('device_settings','target_language')	
-        self.trans_label.configure(text=f"Translated Text - {language}:")	
+        self.trans_label.configure(text=f"Translated Text \n- {language} -")	
         
         for num in range(0,len(loaded_json)):	
             for n,each_seg in enumerate(loaded_json[f'block{num}']):	
@@ -360,7 +360,7 @@ class TranslationPage(tk.Frame):
         # Use Selected image
         img = (Image.open(self.curr_img_path))
 
-        resized_image= img.resize((500,500), Image.ANTIALIAS)
+        resized_image= img.resize((400,400), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
         self.img_label.configure(image = new_image)
@@ -379,24 +379,21 @@ class TranslationPage(tk.Frame):
         for each_ele in self.list_of_text_objects:
             each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
             
-            if int(n_font_size) == 10:	
+            if int(n_font_size) == 14:	
                 print(n_font_size)	
-                each_ele.configure(width=64, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 64)))	
-            elif int(n_font_size) == 14:	
-                print(n_font_size)	
-                each_ele.configure(width=41, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 41)))	
+                each_ele.configure(width=26, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 26)))	
             elif int(n_font_size) == 18:	
                 print(n_font_size)	
-                each_ele.configure(width=34, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 34)))	
+                each_ele.configure(width=21, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 21)))	
             elif int(n_font_size) == 22:	
                 print(n_font_size)	
-                each_ele.configure(width=28, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 28)))	
+                each_ele.configure(width=17, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 17)))	
             elif int(n_font_size) == 26:	
                 print(n_font_size)	
-                each_ele.configure(width=23, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 23)))	
+                each_ele.configure(width=14, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 14)))	
             elif int(n_font_size) == 30:	
                 print(n_font_size)	
-                each_ele.configure(width=20, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 20))) # , height=4	
+                each_ele.configure(width=12, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 12))) # , height=4	
     
     def length_validaiton(self, text_length, max_length):	
         int(21 / 5) + (21 % 5 > 0)	
