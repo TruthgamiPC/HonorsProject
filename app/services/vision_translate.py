@@ -121,19 +121,19 @@ class HistoryPage(tk.Frame):
 
         ''' RIGHT SIDE '''
         # Device Settings
-        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : self.transition_func("SettingsPage"))
+        settings_btn = Button(rightFrame,text="Settings", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("SettingsPage"))
         settings_btn.grid(row=0,column=0,padx=5,pady=4)
 
         # Back To Main screen
-        takePhoto_btn = Button(rightFrame,text="Take a New Photo",width=100,height=100, command= lambda : self.transition_func("MainPage"))
+        takePhoto_btn = Button(rightFrame,text="Take a New Photo", font = self.controller.button_font,width=100,height=100, command= lambda : self.transition_func("MainPage"))
         takePhoto_btn.grid(row=1,column=0,padx=5,pady=4)
 
         # Delete Save
-        delete_btn = Button(rightFrame,text="Delete Save",width=100,height=100, command = lambda : self.delete_func())
+        delete_btn = Button(rightFrame,text="Delete Save", font = self.controller.button_font,width=100,height=100, command = lambda : self.delete_func())
         delete_btn.grid(row=2,column=0,padx=5,pady=4)
 
         # Open Translation
-        translation_btn = Button(rightFrame,text="View Translation",width=100,height=100, command = lambda : self.transition_func("TranslationPage"))
+        translation_btn = Button(rightFrame,text="View Translation", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("TranslationPage"))
         translation_btn.grid(row=3,column=0,padx=5,pady=4)
 
 
@@ -196,8 +196,9 @@ class HistoryPage(tk.Frame):
 
     def update_font(self):
         loader = self.controller.settings_page.load_file()
-        tmp_font = tkFont.Font(family='Helvetica', size = loader.get('device_settings','font_size'))
-        # for each_ele in self.imagesList:
+                # n_font_size = loader.get('device_settings','font_size')	
+        tmp_font = tkFont.Font(family='Helvetica', size = 26)	
+        self.imagesList.configure(width=25, height=18)        # for each_ele in self.imagesList:
         self.imagesList.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
     def update_frame(self):
@@ -231,6 +232,8 @@ class TranslationPage(tk.Frame):
         self.state_display = True
         self.curr_img_path = ''
         self.list_of_text_objects = []
+        font_first = tkFont.Font(family='Helvetica',size=28)
+        
 
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -249,6 +252,13 @@ class TranslationPage(tk.Frame):
         self.leftFrame.grid_propagate(False)
 
         '''LEFT SIDE'''
+        self.og_label = Label(self.ls_frame.viewPort, text="Original Text:", font = font_first)	
+        self.og_label.grid(column=0,row=0, pady = 10)	
+        # language = loader.get('device_settings','target_language')	
+        self.trans_label = Label(self.ls_frame.viewPort, text="", font = font_first)	
+        self.trans_label.grid(column=1,row=0, pady = 10)	
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        
         self.img_label = Label(self.leftFrame)
         self.img_label.grid(row=200, column=200,padx=5,pady=50)
 
@@ -258,19 +268,19 @@ class TranslationPage(tk.Frame):
 
         ''' RIGHT SIDE '''
         # Device Settings
-        settings_btn = Button(rightFrame,text="Settings",width=100,height=100, command = lambda : self.transition_func("SettingsPage"))
+        settings_btn = Button(rightFrame,text="Settings", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("SettingsPage"))
         settings_btn.grid(row=0,column=0,padx=5,pady=4)
 
         # Back to Main Page
-        main_page_btn = Button(rightFrame,text="Take a New Photo",width=100,height=100, command = lambda : self.transition_func("MainPage"))
+        main_page_btn = Button(rightFrame,text="Take a New Photo", font = self.controller.button_font,width=100,height=100, command = lambda : self.transition_func("MainPage"))
         main_page_btn.grid(row=1,column=0,padx=5,pady=4)
 
         # Back to history
-        history_btn = Button(rightFrame,text="History",width=100,height=100, command= lambda : self.transition_func("HistoryPage"))
+        history_btn = Button(rightFrame,text="History", font = self.controller.button_font,width=100,height=100, command= lambda : self.transition_func("HistoryPage"))
         history_btn.grid(row=2,column=0,padx=5,pady=4)
 
         # View Image
-        self.updatable_btn = Button(rightFrame,text="View Image", width=100, height=100, command = lambda : self.switch_display())
+        self.updatable_btn = Button(rightFrame,text="View Image", font = self.controller.button_font, width=100, height=100, command = lambda : self.switch_display())
         self.updatable_btn.grid(row=3,column=0,padx=5,pady=4)
 
         buttonList = [self.updatable_btn, settings_btn, history_btn, main_page_btn]
@@ -281,17 +291,23 @@ class TranslationPage(tk.Frame):
             counter += 1
 
     # Constructing the text boxes with translation text
-    def receive_text_data(self):
-        loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())
-
-        for num in range(0,len(loaded_json)):
-            for n,each_seg in enumerate(loaded_json[f'block{num}']):
-                og_text = tk.Text(self.ls_frame.viewPort,height=4,width=20)
-                trans_text = tk.Text(self.ls_frame.viewPort,height=4,width=20)
-
-                og_text.grid(column=0,row=(num+n),ipadx=25,ipady=5) # ,ipadx=25,ipady=5
-                trans_text.grid(column=1,row=(num+n),ipadx=25,ipady=5) # ipadx=25,ipady=5
-
+    def receive_text_data(self):	
+        loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())	
+        loader = self.controller.settings_page.load_file()	
+        language = loader.get('device_settings','target_language')	
+        self.trans_label.configure(text=f"Translated Text - {language}:")	
+        
+        for num in range(0,len(loaded_json)):	
+            for n,each_seg in enumerate(loaded_json[f'block{num}']):	
+                if each_seg['translated_text'] == "Invalid Translation #000044":	
+                    continue	
+                if (each_seg['translated_text'].replace(' ','')) == (each_seg['original_text'].replace(' ','')):	
+                    continue	
+                og_text = tk.Text(self.ls_frame.viewPort,width=20)	
+                trans_text = tk.Text(self.ls_frame.viewPort,width=20)	
+                og_text.grid(column=0,row=(num+n+1),padx=10, pady=10) # ,ipadx=25,ipady=5	
+                trans_text.grid(column=1,row=(num+n+1),padx=10, pady=10) # ipadx=25,ipady=5
+                
                 og_text.insert(tk.END,each_seg['original_text'])
                 trans_text.insert(tk.END,each_seg['translated_text'])
 
@@ -357,10 +373,38 @@ class TranslationPage(tk.Frame):
 
     def update_font(self):
         loader = self.controller.settings_page.load_file()
-        tmp_font = tkFont.Font(family='Helvetica', size = loader.get('device_settings','font_size'))
+        n_font_size = loader.get('device_settings','font_size')	
+        tmp_font = tkFont.Font(family='Helvetica', size = n_font_size)
+        
         for each_ele in self.list_of_text_objects:
             each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
-
+            
+            if int(n_font_size) == 10:	
+                print(n_font_size)	
+                each_ele.configure(width=64, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 64)))	
+            elif int(n_font_size) == 14:	
+                print(n_font_size)	
+                each_ele.configure(width=41, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 41)))	
+            elif int(n_font_size) == 18:	
+                print(n_font_size)	
+                each_ele.configure(width=34, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 34)))	
+            elif int(n_font_size) == 22:	
+                print(n_font_size)	
+                each_ele.configure(width=28, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 28)))	
+            elif int(n_font_size) == 26:	
+                print(n_font_size)	
+                each_ele.configure(width=23, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 23)))	
+            elif int(n_font_size) == 30:	
+                print(n_font_size)	
+                each_ele.configure(width=20, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 20))) # , height=4	
+    
+    def length_validaiton(self, text_length, max_length):	
+        int(21 / 5) + (21 % 5 > 0)	
+        if (int(text_length / max_length) + (text_length % max_length > 0)) < 5:	
+            return (int(text_length / max_length) + (text_length % max_length > 0))	
+        else:	
+            return 5
+        
     # Updates the frame on call
     def update_frame(self):
         # ensure list_of_text_objects is empty
