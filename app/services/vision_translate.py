@@ -232,7 +232,7 @@ class TranslationPage(tk.Frame):
         self.state_display = True
         self.curr_img_path = ''
         self.list_of_text_objects = []
-        font_first = tkFont.Font(family='Helvetica',size=20)
+        font_first = tkFont.Font(family='Helvetica',size=22)
 
 
         screen_width = self.winfo_screenwidth()
@@ -305,14 +305,16 @@ class TranslationPage(tk.Frame):
             return "Italian"
         elif lang_pass == "fr":
             return "French"
+        else:
+            return "Old/Custom Image detected"
 
 
     # Constructing the text boxes with translation text
     def receive_text_data(self):
         loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())
-        loader = self.controller.settings_page.load_file()
+        # loader = self.controller.settings_page.load_file()
 
-        img_language = self.selected_img
+        img_language = self.controller.selected_img
         print(img_language[:2])
         print(img_language)
         lang_full = self.language_detect(img_language[:2])
