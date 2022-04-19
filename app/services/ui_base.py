@@ -128,7 +128,7 @@ class MainPage(tk.Frame):
         # return
         if self.state:
             print("on")
-            self.camera.start_preview(fullscreen=False,window=(5,10,580,580))
+            self.camera.start_preview(fullscreen=False,window=(10,10,580,580))
         else:
             print("off")
             self.camera.stop_preview()
@@ -145,17 +145,17 @@ class MainPage(tk.Frame):
         self.controller.selected_img = stripped_img_name
 
         print(n_img_name, ' - - - ',stripped_img_name)
-        
+
     def takePhoto(self):
         # Takes a photo the moment the button is pressed
         # Stores it in format : dd-mm-yyyy-HH-MM-SS.jpg
         date = datetime.datetime.now()
-        file_ver = str(date.strftime("%d") + "-" + date.strftime("%m") + "-" + date.strftime("%Y") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
+        file_ver = str(self.controller.settings_page.target_lang + "-" + date.strftime("%y") + "-" + date.strftime("%m") + "-"  + date.strftime("%d") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
         # file_ver = "3"
         file_ver = "../images/"+ file_ver + ".png"
         print(file_ver)
         self.camera.capture(file_ver)
-                
+
         self.post_takePhoto(file_ver)
 
     def transition_func(self,directory):
@@ -177,7 +177,7 @@ class SettingsPage(tk.Frame):
         font_first = tkFont.Font(family='Helvetica',size=28)
         self.settings_translate = translate.Client()
         self.target_lang = ""
-        
+
         font_options = [14,18,22,26,30]
         self.selected_font_size = StringVar(self)
 
@@ -207,35 +207,35 @@ class SettingsPage(tk.Frame):
 
         ''' LEFT SIDE'''
         self.font_text_box = tkFont.Font(family='Helvetica',size=self.selected_font_size.get())
-        
+
         # Frame for buttons
         self.button_hold_frame = Frame(leftFrame,bg="#c7c7c7")
         self.button_hold_frame.grid(column=0,row=0, pady=(40,0))
- 
-         
+
+
          # Frame for text demo
         self.child_left_frame = Frame(leftFrame, highlightbackground="black", highlightthickness=2,bg="#c7c7c7")
         self.child_left_frame.grid(column=0, row=1, padx=40,pady=20)
-        
-        
+
+
         # Original Text display
         self.og_text_box = tk.Text(self.child_left_frame, height=1, width=20)
         self.og_text_box.grid(column=0,row=0,pady=10,padx=10)
         self.og_text_box.insert(tk.END,'Sample text for demo')
         self.og_text_box.configure(state ='disabled')
         self.og_text_box.configure(font = self.font_text_box)
-        
+
          # Translated Text display
         self.trans_text_box = tk.Text(self.child_left_frame, height=1, width=20)
         self.trans_text_box.grid(column=1,row=0,pady=10,padx=10)
         self.trans_text_box.insert(tk.END,'Sample text for demo')
         self.trans_text_box.configure(state ='disabled')
         self.trans_text_box.configure(font = self.font_text_box)
-        
-        
+
+
         ''' FIRST DROP DOWN '''
         font_size_dropdown = OptionMenu(self.button_hold_frame, self.selected_font_size, *font_options, command= self.update_font)
-        font_size_dropdown.grid(row=0,column=0,padx=(20,5),pady=25)     
+        font_size_dropdown.grid(row=0,column=0,padx=(20,5),pady=25)
         font_size_dropdown.configure(font=font_first)
 
         size_menu = self.button_hold_frame.nametowidget(font_size_dropdown.menuname)
@@ -276,7 +276,11 @@ class SettingsPage(tk.Frame):
         main_page_btn = Button(rightFrame,text="New Photo", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("MainPage"))
         main_page_btn.grid(row=1,column=0,padx=5,pady=4)
 
-        buttonList = [history_btn,main_page_btn]
+        trans_page_btn = Button(rightFrame,text="View\nTranslation", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("TranslationPage"))
+        trans_page_btn.grid(row=1,column=0,padx=5,pady=4)
+
+
+        buttonList = [history_btn,main_page_btn,trans_page_btn]
         counter = 0
         for x in buttonList:
             rightFrame.grid_columnconfigure(counter,weight=1)
@@ -364,7 +368,7 @@ class SettingsPage(tk.Frame):
             return (int(text_length / max_length) + (text_length % max_length > 0))
         else:
             return 5
-        
+
     def update_font(self, event):
         # Burner function that is used to accept event state
         self.update_font_c()

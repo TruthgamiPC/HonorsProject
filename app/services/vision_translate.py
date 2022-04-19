@@ -61,7 +61,7 @@ class HistoryPage(tk.Frame):
         screen_height = self.winfo_screenheight()
 
         # Main functional area
-        leftFrame = Frame(self,width=(screen_width/4*3), height=screen_height,bg="red")
+        leftFrame = Frame(self,width=(screen_width/4*3), height=screen_height,bg="#c7c7c7")
         leftFrame.pack(side=LEFT,padx=5,pady=10)
 
         # Button Area
@@ -100,7 +100,7 @@ class HistoryPage(tk.Frame):
 
         self.controller.selected_img = self.controller.fileReading.image_files[0]
         img= (Image.open("../images_bound/" + self.controller.recive_selected_img()))
-        resized_image= img.resize((300,300), Image.ANTIALIAS)
+        resized_image= img.resize((350,350), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
         self.img_label = Label(leftFrame, image = new_image)
@@ -196,8 +196,8 @@ class HistoryPage(tk.Frame):
 
     def update_font(self):
         loader = self.controller.settings_page.load_file()
-                # n_font_size = loader.get('device_settings','font_size')	
-        tmp_font = tkFont.Font(family='Helvetica', size = 26)	
+                # n_font_size = loader.get('device_settings','font_size')
+        tmp_font = tkFont.Font(family='Helvetica', size = 26)
         self.imagesList.configure(width=25, height=18)        # for each_ele in self.imagesList:
         self.imagesList.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
@@ -211,7 +211,7 @@ class HistoryPage(tk.Frame):
         # Use Selected image
         img = (Image.open(self.curr_img_path))
 
-        resized_image= img.resize((300,300), Image.ANTIALIAS)
+        resized_image= img.resize((350,350), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
         self.img_label.configure(image = new_image)
@@ -233,12 +233,12 @@ class TranslationPage(tk.Frame):
         self.curr_img_path = ''
         self.list_of_text_objects = []
         font_first = tkFont.Font(family='Helvetica',size=20)
-        
+
 
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        self.leftFrame = Frame(self, width=(screen_width/4*3), height=screen_height, bg="red")
+        self.leftFrame = Frame(self, width=(screen_width/4*3), height=screen_height, bg="#c7c7c7")
         self.leftFrame.pack(side=LEFT,padx=5,pady=10)
 
         self.ls_frame = ScrollFrame(self.leftFrame)
@@ -252,13 +252,13 @@ class TranslationPage(tk.Frame):
         self.leftFrame.grid_propagate(False)
 
         '''LEFT SIDE'''
-        self.og_label = Label(self.ls_frame.viewPort, text="Original Text:", font = font_first)	
-        self.og_label.grid(column=0,row=0, pady = 10)	
-        # language = loader.get('device_settings','target_language')	
-        self.trans_label = Label(self.ls_frame.viewPort, text="", font = font_first)	
-        self.trans_label.grid(column=1,row=0, pady = 10)	
+        self.og_label = Label(self.ls_frame.viewPort, text="Original Text:", font = font_first)
+        self.og_label.grid(column=0,row=0, pady = 10)
+        # language = loader.get('device_settings','target_language')
+        self.trans_label = Label(self.ls_frame.viewPort, text="", font = font_first)
+        self.trans_label.grid(column=1,row=0, pady = 10)
         # - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        
+
         self.img_label = Label(self.leftFrame)
         self.img_label.grid(row=200, column=200,padx=5,pady=50)
 
@@ -291,23 +291,23 @@ class TranslationPage(tk.Frame):
             counter += 1
 
     # Constructing the text boxes with translation text
-    def receive_text_data(self):	
-        loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())	
-        loader = self.controller.settings_page.load_file()	
-        language = loader.get('device_settings','target_language')	
-        self.trans_label.configure(text=f"Translated Text \n- {language} -")	
-        
-        for num in range(0,len(loaded_json)):	
-            for n,each_seg in enumerate(loaded_json[f'block{num}']):	
-                if each_seg['translated_text'] == "Invalid Translation #000044":	
-                    continue	
-                if (each_seg['translated_text'].replace(' ','')) == (each_seg['original_text'].replace(' ','')):	
-                    continue	
-                og_text = tk.Text(self.ls_frame.viewPort,width=20)	
-                trans_text = tk.Text(self.ls_frame.viewPort,width=20)	
-                og_text.grid(column=0,row=(num+n+1),padx=10, pady=10) # ,ipadx=25,ipady=5	
+    def receive_text_data(self):
+        loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())
+        loader = self.controller.settings_page.load_file()
+        language = loader.get('device_settings','target_language')
+        self.trans_label.configure(text=f"Translated Text \n- {language} -")
+
+        for num in range(0,len(loaded_json)):
+            for n,each_seg in enumerate(loaded_json[f'block{num}']):
+                if each_seg['translated_text'] == "Invalid Translation #000044":
+                    continue
+                if (each_seg['translated_text'].replace(' ','')) == (each_seg['original_text'].replace(' ','')):
+                    continue
+                og_text = tk.Text(self.ls_frame.viewPort,width=20)
+                trans_text = tk.Text(self.ls_frame.viewPort,width=20)
+                og_text.grid(column=0,row=(num+n+1),padx=10, pady=10) # ,ipadx=25,ipady=5
                 trans_text.grid(column=1,row=(num+n+1),padx=10, pady=10) # ipadx=25,ipady=5
-                
+
                 og_text.insert(tk.END,each_seg['original_text'])
                 trans_text.insert(tk.END,each_seg['translated_text'])
 
@@ -326,10 +326,14 @@ class TranslationPage(tk.Frame):
         self.list_of_text_objects.clear()
 
     def hide_text_data(self):
+        self.og_label.grid_remove()
+        self.trans_label.grid_remove()
         for each_el in self.list_of_text_objects:
             each_el.grid_remove()
 
     def unhide_text_data(self):
+        self.og_label.grid()
+        self.trans_label.grid()
         for each_el in self.list_of_text_objects:
             each_el.grid()
 
@@ -360,7 +364,7 @@ class TranslationPage(tk.Frame):
         # Use Selected image
         img = (Image.open(self.curr_img_path))
 
-        resized_image= img.resize((400,400), Image.ANTIALIAS)
+        resized_image= img.resize((350,350), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
         self.img_label.configure(image = new_image)
@@ -373,35 +377,35 @@ class TranslationPage(tk.Frame):
 
     def update_font(self):
         loader = self.controller.settings_page.load_file()
-        n_font_size = loader.get('device_settings','font_size')	
+        n_font_size = loader.get('device_settings','font_size')
         tmp_font = tkFont.Font(family='Helvetica', size = n_font_size)
-        
+
         for each_ele in self.list_of_text_objects:
             each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
-            
-            if int(n_font_size) == 14:	
-                print(n_font_size)	
-                each_ele.configure(width=26, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 26)))	
-            elif int(n_font_size) == 18:	
-                print(n_font_size)	
-                each_ele.configure(width=21, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 21)))	
-            elif int(n_font_size) == 22:	
-                print(n_font_size)	
-                each_ele.configure(width=17, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 17)))	
-            elif int(n_font_size) == 26:	
-                print(n_font_size)	
-                each_ele.configure(width=14, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 14)))	
-            elif int(n_font_size) == 30:	
-                print(n_font_size)	
-                each_ele.configure(width=12, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 12))) # , height=4	
-    
-    def length_validaiton(self, text_length, max_length):	
-        int(21 / 5) + (21 % 5 > 0)	
-        if (int(text_length / max_length) + (text_length % max_length > 0)) < 5:	
-            return (int(text_length / max_length) + (text_length % max_length > 0))	
-        else:	
+
+            if int(n_font_size) == 14:
+                print(n_font_size)
+                each_ele.configure(width=26, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 26)))
+            elif int(n_font_size) == 18:
+                print(n_font_size)
+                each_ele.configure(width=21, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 21)))
+            elif int(n_font_size) == 22:
+                print(n_font_size)
+                each_ele.configure(width=17, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 17)))
+            elif int(n_font_size) == 26:
+                print(n_font_size)
+                each_ele.configure(width=14, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 14)))
+            elif int(n_font_size) == 30:
+                print(n_font_size)
+                each_ele.configure(width=12, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 12))) # , height=4
+
+    def length_validaiton(self, text_length, max_length):
+        int(21 / 5) + (21 % 5 > 0)
+        if (int(text_length / max_length) + (text_length % max_length > 0)) < 5:
+            return (int(text_length / max_length) + (text_length % max_length > 0))
+        else:
             return 5
-        
+
     # Updates the frame on call
     def update_frame(self):
         # ensure list_of_text_objects is empty
