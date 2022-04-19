@@ -197,7 +197,7 @@ class HistoryPage(tk.Frame):
     def update_font(self):
         loader = self.controller.settings_page.load_file()
                 # n_font_size = loader.get('device_settings','font_size')
-        tmp_font = tkFont.Font(family='Helvetica', size = 26)
+        tmp_font = tkFont.Font(family='Helvetica', size = 20)
         self.imagesList.configure(width=25, height=18)        # for each_ele in self.imagesList:
         self.imagesList.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
@@ -290,12 +290,36 @@ class TranslationPage(tk.Frame):
             rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
+    def language_detect(self,lang_pass):
+        if lang_pass == "en":
+            return "English"
+        elif lang_pass == "de":
+            return "German"
+        elif lang_pass == "bg":
+            return "Bulgarian"
+        elif lang_pass == "ru":
+            return "Russian "
+        elif lang_pass == "nl":
+            return "Dutch"
+        elif lang_pass == "it":
+            return "Italian"
+        elif lang_pass == "fr":
+            return "French"
+
+
     # Constructing the text boxes with translation text
     def receive_text_data(self):
         loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())
         loader = self.controller.settings_page.load_file()
-        language = loader.get('device_settings','target_language')
-        self.trans_label.configure(text=f"Translated Text \n- {language} -")
+
+        img_language = self.selected_img
+        print(img_language[:2])
+        print(img_language)
+        lang_full = self.language_detect(img_language[:2])
+        # language = loader.get('device_settings','target_language')
+        self.trans_label.configure(text=f"Translated Text \n- {lang_full} -")
+
+
         self.ls_frame.viewPort.grid_columnconfigure(0,weight=1)
         self.ls_frame.viewPort.grid_columnconfigure(1,weight=1)
 
@@ -368,7 +392,7 @@ class TranslationPage(tk.Frame):
         # Use Selected image
         img = (Image.open(self.curr_img_path))
 
-        resized_image= img.resize((350,350), Image.ANTIALIAS)
+        resized_image= img.resize((500,500), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
         self.img_label.configure(image = new_image)
@@ -388,19 +412,19 @@ class TranslationPage(tk.Frame):
             each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
             if int(n_font_size) == 14:
-                print(n_font_size)
+                # print(n_font_size)
                 each_ele.configure(width=26, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 26)))
             elif int(n_font_size) == 18:
-                print(n_font_size)
+                # print(n_font_size)
                 each_ele.configure(width=21, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 21)))
             elif int(n_font_size) == 22:
-                print(n_font_size)
+                # print(n_font_size)
                 each_ele.configure(width=17, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 17)))
             elif int(n_font_size) == 26:
-                print(n_font_size)
+                # print(n_font_size)
                 each_ele.configure(width=14, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 14)))
             elif int(n_font_size) == 30:
-                print(n_font_size)
+                # print(n_font_size)
                 each_ele.configure(width=12, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 12))) # , height=4
 
     def length_validaiton(self, text_length, max_length):
