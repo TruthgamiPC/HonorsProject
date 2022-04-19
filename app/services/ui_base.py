@@ -314,7 +314,7 @@ class SettingsPage(tk.Frame):
         trans_page_btn.grid(row=1,column=0,padx=5,pady=4)
 
         for n in range(0,3):
-            button_hold_frame.grid_columnconfigure(n, weight=1)
+            self.button_hold_frame.grid_columnconfigure(n, weight=1)
 
         for p in range(0,2):
             leftFrame.grid_rowconfigure(p, weight=1)
