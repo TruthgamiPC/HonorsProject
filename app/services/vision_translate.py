@@ -314,8 +314,8 @@ class TranslationPage(tk.Frame):
         # loader = self.controller.settings_page.load_file()
 
         img_language = self.controller.selected_img
-        print(img_language[:2])
-        print(img_language)
+        # print(img_language[:2])
+        # print(img_language)
         lang_full = self.language_detect(img_language[:2])
         # language = loader.get('device_settings','target_language')
         self.trans_label.configure(text=f"Translated Text\n- {lang_full} -")
@@ -324,6 +324,7 @@ class TranslationPage(tk.Frame):
         self.ls_frame.viewPort.grid_columnconfigure(0,weight=1)
         self.ls_frame.viewPort.grid_columnconfigure(1,weight=1)
 
+        row_counter = 1
         for num in range(0,len(loaded_json)):
             for n,each_seg in enumerate(loaded_json[f'block{num}']):
                 if each_seg['translated_text'] == "Invalid Translation #000044":
@@ -332,8 +333,8 @@ class TranslationPage(tk.Frame):
                     continue
                 og_text = tk.Text(self.ls_frame.viewPort,width=20)
                 trans_text = tk.Text(self.ls_frame.viewPort,width=20)
-                og_text.grid(column=0,row=(num+n+1),padx=10, pady=10) # ,ipadx=25,ipady=5
-                trans_text.grid(column=1,row=(num+n+1),padx=10, pady=10) # ipadx=25,ipady=5
+                og_text.grid(column=0,row=(row_counter),padx=10, pady=10) # num+n+1,ipadx=25,ipady=5
+                trans_text.grid(column=1,row=(row_counter),padx=10, pady=10) # ipadx=25,ipady=5
 
                 og_text.insert(tk.END,each_seg['original_text'])
                 trans_text.insert(tk.END,each_seg['translated_text'])
@@ -346,6 +347,8 @@ class TranslationPage(tk.Frame):
 
                 self.leftFrame.grid_columnconfigure(num,weight=1)
                 # self.leftFrame.grid_rowconfigure(num,weight=1)
+
+                row_counter += 1
 
 
 

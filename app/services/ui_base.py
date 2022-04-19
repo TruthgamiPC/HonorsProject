@@ -234,32 +234,44 @@ class SettingsPage(tk.Frame):
 
 
         ''' FIRST DROP DOWN '''
+        font_size_label = Label(self.button_hold_frame, text="Font Size:")
+        font_size_label.grid(row,0,column=0,padx=(20,5),pady=(20,0))
+
         font_size_dropdown = OptionMenu(self.button_hold_frame, self.selected_font_size, *font_options, command= self.update_font)
-        font_size_dropdown.grid(row=0,column=0,padx=(20,5),pady=25)
+        font_size_dropdown.grid(row=1,column=0,padx=(20,5),pady=(5,20))
         font_size_dropdown.configure(font=font_first)
 
         size_menu = self.button_hold_frame.nametowidget(font_size_dropdown.menuname)
         size_menu.config(font=font_first)  # Set the dropdown menu's font
 
         ''' SECOND DROP DOWN '''
+        text_color_label = Label(self.button_hold_frame, text="Text Color:")
+        text_color_label.grid(row,0,column=1,padx=5,pady=(20,0))
+
         font_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_f_colour, *f_colour_options, command= self.update_font)
-        font_colour_dropdown.grid(row=0,column=1,padx=5,pady=25)
+        font_colour_dropdown.grid(row=1,column=1,padx=5,pady=(5,20))
         font_colour_dropdown.configure(font=font_first)
 
         f_colour_menu = self.button_hold_frame.nametowidget(font_colour_dropdown.menuname)
         f_colour_menu.config(font=font_first)
 
         ''' THIRD DROP DOWN '''
+        bg_colour_label = Label(self.button_hold_frame, text="Text Color:")
+        bg_colour_label.grid(row,0,column=2,padx=5,pady=(20,0))
+
         bg_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_bg_colour, *bg_colour_options, command= self.update_font)
-        bg_colour_dropdown.grid(row=0, column=2, padx=5, pady=25)
+        bg_colour_dropdown.grid(row=1, column=2, padx=5, pady=(5,20))
         bg_colour_dropdown.configure(font=font_first)
 
         bg_colour_menu = self.button_hold_frame.nametowidget(bg_colour_dropdown.menuname)
         bg_colour_menu.config(font= font_first)
 
         ''' FORTH DROP DOWN '''
+        target_lang_label = Label(self.button_hold_frame, text="Text Color:")
+        target_lang_label.grid(row,0,column=3,padx=(5,20),pady=(20,0))
+
         language_dropdown = OptionMenu(self.button_hold_frame, self.selected_language, *language_options, command= self.update_font)
-        language_dropdown.grid(row=0, column=3, padx=(5,20), pady=25)
+        language_dropdown.grid(row=1, column=3, padx=(5,20), pady=(5,20))
         language_dropdown.configure(font=font_first)
 
         language_menu = self.button_hold_frame.nametowidget(language_dropdown.menuname)
