@@ -208,7 +208,7 @@ class HistoryPage(tk.Frame):
         self.update_font()
 
         self.controller.main_page.camera.stop_preview()
-        self.controller.main_page.state = False
+        self.controller.main_page.state = True
 
     def update_img(self):
         # Use Selected image
@@ -454,4 +454,4 @@ class TranslationPage(tk.Frame):
         self.update_font()
 
         self.controller.main_page.camera.stop_preview()
-        self.controller.main_page.state = False
+        self.controller.main_page.state = True

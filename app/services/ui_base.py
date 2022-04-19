@@ -410,7 +410,7 @@ class SettingsPage(tk.Frame):
 
     def update_frame(self):
         self.controller.main_page.camera.stop_preview()
-        self.controller.main_page.state = False
+        self.controller.main_page.state = True
         # return
 
 
