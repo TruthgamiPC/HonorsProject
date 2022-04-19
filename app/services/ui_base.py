@@ -313,6 +313,11 @@ class SettingsPage(tk.Frame):
         trans_page_btn = Button(rightFrame,text="View\nTranslation", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("TranslationPage"))
         trans_page_btn.grid(row=1,column=0,padx=5,pady=4)
 
+        for n in range(0,3):
+            button_hold_frame.grid_columnconfigure(n, weight=1)
+
+        for p in range(0,2):
+            leftFrame.grid_rowconfigure(p, weight=1)
 
         buttonList = [history_btn,main_page_btn,trans_page_btn]
         counter = 0
