@@ -254,7 +254,7 @@ class SettingsPage(tk.Frame):
 
 
         ''' FIRST DROP DOWN '''
-        font_type_label = Label(self.button_hold_frame, text="Font Size:", font=font_labels,bg="#c7c7c7")
+        font_type_label = Label(self.button_hold_frame, text="Font Type:", font=font_labels,bg="#c7c7c7")
         font_type_label.grid(row=2,column=0,padx=(20,5),pady=(20,0))
 
         font_type_dropdown = OptionMenu(self.button_hold_frame, self.selected_type, *type_options, command= self.update_font)
