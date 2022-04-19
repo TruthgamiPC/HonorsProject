@@ -296,6 +296,8 @@ class TranslationPage(tk.Frame):
         loader = self.controller.settings_page.load_file()
         language = loader.get('device_settings','target_language')
         self.trans_label.configure(text=f"Translated Text \n- {language} -")
+        self.ls_frame.viewPort.grid_columnconfigure(0,weight=1)
+        self.ls_frame.viewPort.grid_columnconfigure(1,weight=1)
 
         for num in range(0,len(loaded_json)):
             for n,each_seg in enumerate(loaded_json[f'block{num}']):
@@ -317,8 +319,10 @@ class TranslationPage(tk.Frame):
                 self.list_of_text_objects.append(og_text)
                 self.list_of_text_objects.append(trans_text)
 
-                # self.leftFrame.grid_columnconfigure(num,weight=1)
+                self.leftFrame.grid_columnconfigure(num,weight=1)
                 # self.leftFrame.grid_rowconfigure(num,weight=1)
+
+
 
     def delete_page_data(self):
         for each_el in self.list_of_text_objects:

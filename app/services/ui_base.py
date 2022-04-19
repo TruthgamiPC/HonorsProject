@@ -108,7 +108,7 @@ class MainPage(tk.Frame):
         history_btn = Button(rightFrame,text="History",font = self.controller.button_font,width=100,height=7, command = lambda : self.transition_func("HistoryPage"))
         history_btn.grid(row=1,column=0,padx=5,pady=4)
 
-        self.view_translation_btn = Button(rightFrame,text="View Translation",font = self.controller.button_font,width=100,height=7, command= lambda : self.transition_func("TranslationPage"))
+        self.view_translation_btn = Button(rightFrame,text="View\nTranslation",font = self.controller.button_font,width=100,height=7, command= lambda : self.transition_func("TranslationPage"))
         self.view_translation_btn.grid(row=2,column=0,padx=5,pady=4)
 
         takePhoto_btn = Button(rightFrame,text="Take photo",font = self.controller.button_font,width=100,height=10, command = lambda : self.takePhoto())
@@ -128,7 +128,7 @@ class MainPage(tk.Frame):
         # return
         if self.state:
             print("on")
-            self.camera.start_preview(fullscreen=False,window=(20,10,580,580))
+            self.camera.start_preview(fullscreen=False,window=(15,10,580,580))
         else:
             print("off")
             self.camera.stop_preview()
