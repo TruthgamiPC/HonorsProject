@@ -24,7 +24,7 @@ class ScrollFrame(tk.Frame):
         screen_height = self.winfo_screenheight()
 
         self.canvas = tk.Canvas(self, width=(screen_width/4*3), height=screen_height,  borderwidth=0, background="#ffffff")          #place canvas on self
-        self.viewPort = tk.Frame(self.canvas, background="#ffffff")
+        self.viewPort = tk.Frame(self.canvas, background="#c7c7c7")
         self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.vsb.set)
 
@@ -83,7 +83,7 @@ class HistoryPage(tk.Frame):
         list_scrollbar = Scrollbar(list_frame, orient="vertical")
 
         # List boxes
-        self.imagesList = Listbox(list_frame,font="Arial 19", yscrollcommand= list_scrollbar.set ,bd=5,height=15,width=22)
+        self.imagesList = Listbox(list_frame, yscrollcommand= list_scrollbar.set ,bd=5,height=15,width=22)
         # self.imagesList.grid(row=0, column=0,padx=5,pady=50)
         self.imagesList.pack(side="left")
 
@@ -196,8 +196,8 @@ class HistoryPage(tk.Frame):
 
     def update_font(self):
         loader = self.controller.settings_page.load_file()
-                # n_font_size = loader.get('device_settings','font_size')
-        tmp_font = tkFont.Font(family='Helvetica', size = 20)
+        # n_font_size = loader.get('device_settings','font_size')
+        tmp_font = tkFont.Font(family='Helvetica', size = 18)
         self.imagesList.configure(width=25, height=18)        # for each_ele in self.imagesList:
         self.imagesList.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
@@ -306,8 +306,7 @@ class TranslationPage(tk.Frame):
         elif lang_pass == "fr":
             return "French"
         else:
-            return "Old/Custom Image detected"
-
+            return "No Language"
 
     # Constructing the text boxes with translation text
     def receive_text_data(self):
@@ -319,7 +318,7 @@ class TranslationPage(tk.Frame):
         print(img_language)
         lang_full = self.language_detect(img_language[:2])
         # language = loader.get('device_settings','target_language')
-        self.trans_label.configure(text=f"Translated Text \n- {lang_full} -")
+        self.trans_label.configure(text=f"Translated Text\n- {lang_full} -")
 
 
         self.ls_frame.viewPort.grid_columnconfigure(0,weight=1)
