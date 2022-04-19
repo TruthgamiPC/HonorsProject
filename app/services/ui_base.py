@@ -137,7 +137,7 @@ class MainPage(tk.Frame):
     def post_takePhoto(self,n_img_name):
         self.controller.selected_img = n_img_name
 
-        vision_func = VisionEntry(n_img_name)
+        vision_func = VisionEntry(n_img_name,self.controller.settings_page.target_lang)
         vision_func.vision_op()
         sleep(3)
 
