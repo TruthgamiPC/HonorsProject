@@ -207,6 +207,8 @@ class HistoryPage(tk.Frame):
         self.update_list()
         self.update_font()
 
+        self.controller.main_page.camera.stop_preview()
+
     def update_img(self):
         # Use Selected image
         img = (Image.open(self.curr_img_path))
@@ -410,7 +412,7 @@ class TranslationPage(tk.Frame):
     def update_font(self):
         loader = self.controller.settings_page.load_file()
         n_font_size = loader.get('device_settings','font_size')
-        tmp_font = tkFont.Font(family='Helvetica', size = n_font_size)
+        tmp_font = tkFont.Font(family=str(loader.selected_type.get()), size = n_font_size)
 
         for each_ele in self.list_of_text_objects:
             each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
@@ -448,3 +450,5 @@ class TranslationPage(tk.Frame):
         self.state_display = True
         self.switch_display()
         self.update_font()
+
+        self.controller.main_page.camera.stop_preview()

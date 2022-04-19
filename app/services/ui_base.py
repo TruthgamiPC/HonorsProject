@@ -45,6 +45,7 @@ class AppUI(tk.Tk):
             # put all of the pages in the same location the one on the top of the stacking order will be the one that is visible.
             frame.grid(row=0, column=0, sticky="nsew")
 
+        self.main_page = self.frames["MainPage"]
         self.settings_page = self.frames["SettingsPage"]
         self.show_frame("MainPage")
 
@@ -162,6 +163,7 @@ class MainPage(tk.Frame):
         # Default type of function to transition in between frames
         # Used to allow for page updates from a lambda command call
         self.photoPreview()
+        self.camera.stop_preview()
         self.controller.show_frame(directory)
 
     def update_frame(self):
@@ -182,6 +184,9 @@ class SettingsPage(tk.Frame):
         font_options = [14,18,22,26,30]
         self.selected_font_size = StringVar(self)
 
+        type_options = ['Times','Arial','Tahoma','Verdana','Helvetica']
+        self.selected_type = StringVar(self)
+
         f_colour_options = ['Black','Red','Yellow','White']
         self.selected_f_colour = StringVar(self)
 
@@ -190,6 +195,8 @@ class SettingsPage(tk.Frame):
 
         language_options = ['English','French','German','Bulgarian','Italian','Dutch','Russian']
         self.selected_language = StringVar(self)
+
+
 
         self.loading_settings()
 
@@ -244,6 +251,20 @@ class SettingsPage(tk.Frame):
 
         size_menu = self.button_hold_frame.nametowidget(font_size_dropdown.menuname)
         size_menu.config(font=font_first)  # Set the dropdown menu's font
+
+
+        ''' FIRST DROP DOWN '''
+        font_type_label = Label(self.button_hold_frame, text="Font Size:", font=font_labels,bg="#c7c7c7")
+        font_type_label.grid(row=2,column=0,padx=(20,5),pady=(20,0))
+
+        font_type_dropdown = OptionMenu(self.button_hold_frame, self.selected_type, *type_options, command= self.update_font)
+        font_type_dropdown.grid(row=3,column=0,padx=(20,5),pady=(5,20))
+        font_type_dropdown.configure(font=font_first)
+
+        type_menu = self.button_hold_frame.nametowidget(font_type_dropdown.menuname)
+        type_menu.config(font=font_first)  # Set the dropdown menu's font
+
+
 
         ''' SECOND DROP DOWN '''
         text_color_label = Label(self.button_hold_frame, text="Text Color:", font=font_labels,bg="#c7c7c7")
@@ -305,6 +326,7 @@ class SettingsPage(tk.Frame):
         config = ConfigParser()
 
         config['device_settings'] = {
+            'font_type' : str(self.selected_type.get()),
             'font_size' : str(self.selected_font_size.get()),
             'text_colour' : str(self.selected_f_colour.get()),
             'bg_colour' : str(self.selected_bg_colour.get()),
@@ -323,13 +345,14 @@ class SettingsPage(tk.Frame):
     def loading_settings(self):
         loader = self.load_file()
 
+        self.selected_type.set(loader.get('device_settings','font_type'))
         self.selected_font_size.set(loader.get('device_settings','font_size'))
         self.selected_f_colour.set(loader.get('device_settings','text_colour'))
         self.selected_bg_colour.set(loader.get('device_settings','bg_colour'))
         self.selected_language.set(loader.get('device_settings','target_language'))
 
     def update_font_c(self):
-        self.font_text_box = tkFont.Font(family='Helvetica' ,size=self.selected_font_size.get())
+        self.font_text_box = tkFont.Font(family=self.selected_type.get() ,size=self.selected_font_size.get())
 
         self.og_text_box.configure(font = self.font_text_box)
         self.og_text_box.configure(fg=self.selected_f_colour.get())
@@ -393,7 +416,8 @@ class SettingsPage(tk.Frame):
         self.controller.show_frame(directory)
 
     def update_frame(self):
-        return
+        self.controller.main_page.camera.stop_preview()
+        # return
 
 
 app = AppUI()
