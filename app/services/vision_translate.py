@@ -412,7 +412,8 @@ class TranslationPage(tk.Frame):
     def update_font(self):
         loader = self.controller.settings_page.load_file()
         n_font_size = loader.get('device_settings','font_size')
-        tmp_font = tkFont.Font(family=str(loader.selected_type.get()), size = n_font_size)
+        n_font_type = loader.get('device_settings','font_type')
+        tmp_font = tkFont.Font(family=n_font_type, size = n_font_size)
 
         for each_ele in self.list_of_text_objects:
             each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
