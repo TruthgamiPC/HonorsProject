@@ -216,11 +216,11 @@ class SettingsPage(tk.Frame):
 
         # Frame for buttons
         self.button_hold_frame = Frame(leftFrame,bg="#c7c7c7")
-        self.button_hold_frame.grid(column=0,row=0, pady=(40,0))
+        self.button_hold_frame.grid(column=0,row=0, pady=(20,0))
 
          # Frame for text demo
         self.child_left_frame = Frame(leftFrame, highlightbackground="black", highlightthickness=2,bg="#c7c7c7")
-        self.child_left_frame.grid(column=0, row=1, padx=40,pady=20)
+        self.child_left_frame.grid(column=0, row=1, padx=20,pady=20)
 
 
         # Original Text display
