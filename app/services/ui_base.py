@@ -174,7 +174,7 @@ class SettingsPage(tk.Frame):
 
         self.configure(bg='grey70')
         self.controller = controller
-        font_first = tkFont.Font(family='Helvetica',size=26)
+        font_first = tkFont.Font(family='Helvetica',size=28)
         font_labels = tkFont.Font(family='Helvetica', size=18)
         self.settings_translate = translate.Client()
         self.target_lang = ""
@@ -258,10 +258,10 @@ class SettingsPage(tk.Frame):
 
         ''' THIRD DROP DOWN '''
         bg_colour_label = Label(self.button_hold_frame, text="Background Colour:", font=font_labels,bg="#c7c7c7")
-        bg_colour_label.grid(row=0,column=2,padx=5,pady=(20,0))
+        bg_colour_label.grid(row=2,column=1,padx=5,pady=(20,0))
 
         bg_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_bg_colour, *bg_colour_options, command= self.update_font)
-        bg_colour_dropdown.grid(row=1, column=2, padx=5, pady=(5,20))
+        bg_colour_dropdown.grid(row=3, column=1, padx=5, pady=(5,20))
         bg_colour_dropdown.configure(font=font_first)
 
         bg_colour_menu = self.button_hold_frame.nametowidget(bg_colour_dropdown.menuname)
@@ -269,10 +269,10 @@ class SettingsPage(tk.Frame):
 
         ''' FORTH DROP DOWN '''
         target_lang_label = Label(self.button_hold_frame, text="Translation Language", font=font_labels,bg="#c7c7c7")
-        target_lang_label.grid(row=0,column=3,padx=(5,20),pady=(20,0))
+        target_lang_label.grid(row=0,column=2,padx=(5,20),pady=(20,0))
 
         language_dropdown = OptionMenu(self.button_hold_frame, self.selected_language, *language_options, command= self.update_font)
-        language_dropdown.grid(row=1, column=3, padx=(5,20), pady=(5,20))
+        language_dropdown.grid(row=1, column=2, padx=(5,20), pady=(5,20))
         language_dropdown.configure(font=font_first)
 
         language_menu = self.button_hold_frame.nametowidget(language_dropdown.menuname)
