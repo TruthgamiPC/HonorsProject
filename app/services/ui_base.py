@@ -239,7 +239,7 @@ class SettingsPage(tk.Frame):
 
 
         ''' FIRST DROP DOWN '''
-        font_size_label = Label(self.button_hold_frame, text="Font Size:", font=font_labels,bg="#c7c7c7")
+        font_size_label = Label(self.button_hold_frame, text="Font Size", font=font_labels,bg="#c7c7c7")
         font_size_label.grid(row=0,column=0,padx=(20,5),pady=(20,0))
 
         font_size_dropdown = OptionMenu(self.button_hold_frame, self.selected_font_size, *font_options, command= self.update_font)
@@ -250,7 +250,7 @@ class SettingsPage(tk.Frame):
         size_menu.config(font=font_first)  # Set the dropdown menu's font
 
         ''' FIRST DROP DOWN '''
-        font_type_label = Label(self.button_hold_frame, text="Font Type:", font=font_labels,bg="#c7c7c7")
+        font_type_label = Label(self.button_hold_frame, text="Font Type", font=font_labels,bg="#c7c7c7")
         font_type_label.grid(row=2,column=0,padx=(20,5),pady=(20,0))
 
         font_type_dropdown = OptionMenu(self.button_hold_frame, self.selected_type, *type_options, command= self.update_font)
@@ -261,7 +261,7 @@ class SettingsPage(tk.Frame):
         type_menu.config(font=font_first)  # Set the dropdown menu's font
 
         ''' SECOND DROP DOWN '''
-        text_color_label = Label(self.button_hold_frame, text="Text Color:", font=font_labels,bg="#c7c7c7")
+        text_color_label = Label(self.button_hold_frame, text="Text Color", font=font_labels,bg="#c7c7c7")
         text_color_label.grid(row=0,column=1,padx=5,pady=(20,0))
 
         font_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_f_colour, *f_colour_options, command= self.update_font)
@@ -283,7 +283,7 @@ class SettingsPage(tk.Frame):
         bg_colour_menu.config(font= font_first)
 
         ''' FORTH DROP DOWN '''
-        target_lang_label = Label(self.button_hold_frame, text="Translation Language", font=font_labels,bg="#c7c7c7")
+        target_lang_label = Label(self.button_hold_frame, text="Translation\nLanguage", font=font_labels,bg="#c7c7c7")
         target_lang_label.grid(row=0,column=2,padx=(5,20),pady=(20,0))
 
         language_dropdown = OptionMenu(self.button_hold_frame, self.selected_language, *language_options, command= self.update_font)
@@ -306,12 +306,6 @@ class SettingsPage(tk.Frame):
 
         trans_page_btn = Button(rightFrame,text="View\nTranslation", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("TranslationPage"))
         trans_page_btn.grid(row=1,column=0,padx=5,pady=4)
-
-        for n in range(0,3):
-            self.button_hold_frame.grid_columnconfigure(n, weight=1)
-
-        for p in range(0,2):
-            leftFrame.grid_rowconfigure(p, weight=1)
 
         buttonList = [history_btn,main_page_btn,trans_page_btn]
         counter = 0
