@@ -23,7 +23,7 @@ class ScrollFrame(tk.Frame):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        self.canvas = tk.Canvas(self, width=(screen_width/4*3), height=screen_height,  borderwidth=0, background="#ffffff")          #place canvas on self
+        self.canvas = tk.Canvas(self, width=(screen_width/4*3), height=screen_height,  borderwidth=0, background="#c7c7c7")          #place canvas on self
         self.viewPort = tk.Frame(self.canvas, background="#c7c7c7")
         self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.vsb.set)
@@ -429,11 +429,10 @@ class TranslationPage(tk.Frame):
                 each_ele.configure(width=12, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 12))) # , height=4
 
     def length_validaiton(self, text_length, max_length):
-        int(21 / 5) + (21 % 5 > 0)
-        if (int(text_length / max_length) + (text_length % max_length > 0)) < 5:
+        if (int(text_length / max_length) + (text_length % max_length > 0)) < 7:
             return (int(text_length / max_length) + (text_length % max_length > 0))
         else:
-            return 5
+            return 7
 
     # Updates the frame on call
     def update_frame(self):
