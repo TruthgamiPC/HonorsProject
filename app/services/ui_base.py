@@ -7,7 +7,6 @@ from PIL import ImageTk, Image
 from google.cloud import translate_v2 as translate
 
 from picamera import PiCamera
-from time import sleep
 
 from file_reading import ReadingFiles
 from vision_translate import HistoryPage, TranslationPage
@@ -140,7 +139,6 @@ class MainPage(tk.Frame):
 
         vision_func = VisionEntry(n_img_name,self.controller.settings_page.target_lang)
         vision_func.vision_op()
-        sleep(3)
 
         stripped_img_name = self.controller.fileReading.og_strip(n_img_name)
         self.controller.selected_img = stripped_img_name

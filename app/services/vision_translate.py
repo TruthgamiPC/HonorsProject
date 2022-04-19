@@ -5,9 +5,6 @@ from tkinter import font as tkFont
 
 from PIL import ImageTk, Image
 
-# from picamera import PiCamera
-from time import sleep
-
 from file_reading import ReadingFiles
 
 import datetime
@@ -83,7 +80,7 @@ class HistoryPage(tk.Frame):
         list_scrollbar = Scrollbar(list_frame, orient="vertical")
 
         # List boxes
-        self.imagesList = Listbox(list_frame, yscrollcommand= list_scrollbar.set ,bd=5,height=15,width=25)
+        self.imagesList = Listbox(list_frame, yscrollcommand= list_scrollbar.set ,bd=5,height=15,width=23)
         # self.imagesList.grid(row=0, column=0,padx=5,pady=50)
         self.imagesList.pack(side="left")
 
@@ -100,7 +97,7 @@ class HistoryPage(tk.Frame):
 
         self.controller.selected_img = self.controller.fileReading.image_files[0]
         img= (Image.open("../images_bound/" + self.controller.recive_selected_img()))
-        resized_image= img.resize((300,300), Image.ANTIALIAS)
+        resized_image= img.resize((250,250), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
         self.img_label = Label(leftFrame, image = new_image)
@@ -198,7 +195,7 @@ class HistoryPage(tk.Frame):
         loader = self.controller.settings_page.load_file()
         # n_font_size = loader.get('device_settings','font_size')
         tmp_font = tkFont.Font(family='Helvetica', size = 18)
-        self.imagesList.configure(width=25, height=18)        # for each_ele in self.imagesList:
+        self.imagesList.configure(width=23, height=18)        # for each_ele in self.imagesList:
         self.imagesList.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
     def update_frame(self):
@@ -214,7 +211,7 @@ class HistoryPage(tk.Frame):
         # Use Selected image
         img = (Image.open(self.curr_img_path))
 
-        resized_image= img.resize((300,300), Image.ANTIALIAS)
+        resized_image= img.resize((250,250), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
         self.img_label.configure(image = new_image)
