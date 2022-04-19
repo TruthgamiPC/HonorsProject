@@ -176,8 +176,8 @@ class SettingsPage(tk.Frame):
 
         self.configure(bg='grey70')
         self.controller = controller
-        font_first = tkFont.Font(family='Helvetica',size=28)
-        font_labels = tkFont.Font(family='Helvetica', size=18)
+        font_first = tkFont.Font(family='Helvetica',size=23)
+        font_labels = tkFont.Font(family='Arial', size=16)
         self.settings_translate = translate.Client()
         self.target_lang = ""
 
@@ -195,8 +195,6 @@ class SettingsPage(tk.Frame):
 
         language_options = ['English','French','German','Bulgarian','Italian','Dutch','Russian']
         self.selected_language = StringVar(self)
-
-
 
         self.loading_settings()
 
@@ -219,7 +217,6 @@ class SettingsPage(tk.Frame):
         # Frame for buttons
         self.button_hold_frame = Frame(leftFrame,bg="#c7c7c7")
         self.button_hold_frame.grid(column=0,row=0, pady=(40,0))
-
 
          # Frame for text demo
         self.child_left_frame = Frame(leftFrame, highlightbackground="black", highlightthickness=2,bg="#c7c7c7")
@@ -252,7 +249,6 @@ class SettingsPage(tk.Frame):
         size_menu = self.button_hold_frame.nametowidget(font_size_dropdown.menuname)
         size_menu.config(font=font_first)  # Set the dropdown menu's font
 
-
         ''' FIRST DROP DOWN '''
         font_type_label = Label(self.button_hold_frame, text="Font Type:", font=font_labels,bg="#c7c7c7")
         font_type_label.grid(row=2,column=0,padx=(20,5),pady=(20,0))
@@ -263,8 +259,6 @@ class SettingsPage(tk.Frame):
 
         type_menu = self.button_hold_frame.nametowidget(font_type_dropdown.menuname)
         type_menu.config(font=font_first)  # Set the dropdown menu's font
-
-
 
         ''' SECOND DROP DOWN '''
         text_color_label = Label(self.button_hold_frame, text="Text Color:", font=font_labels,bg="#c7c7c7")
