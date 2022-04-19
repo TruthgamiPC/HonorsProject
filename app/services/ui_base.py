@@ -235,7 +235,7 @@ class SettingsPage(tk.Frame):
 
         ''' FIRST DROP DOWN '''
         font_size_label = Label(self.button_hold_frame, text="Font Size:")
-        font_size_label.grid(row,0,column=0,padx=(20,5),pady=(20,0))
+        font_size_label.grid(row=0,column=0,padx=(20,5),pady=(20,0))
 
         font_size_dropdown = OptionMenu(self.button_hold_frame, self.selected_font_size, *font_options, command= self.update_font)
         font_size_dropdown.grid(row=1,column=0,padx=(20,5),pady=(5,20))
@@ -246,7 +246,7 @@ class SettingsPage(tk.Frame):
 
         ''' SECOND DROP DOWN '''
         text_color_label = Label(self.button_hold_frame, text="Text Color:")
-        text_color_label.grid(row,0,column=1,padx=5,pady=(20,0))
+        text_color_label.grid(row=0,column=1,padx=5,pady=(20,0))
 
         font_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_f_colour, *f_colour_options, command= self.update_font)
         font_colour_dropdown.grid(row=1,column=1,padx=5,pady=(5,20))
@@ -257,7 +257,7 @@ class SettingsPage(tk.Frame):
 
         ''' THIRD DROP DOWN '''
         bg_colour_label = Label(self.button_hold_frame, text="Text Color:")
-        bg_colour_label.grid(row,0,column=2,padx=5,pady=(20,0))
+        bg_colour_label.grid(row=0,column=2,padx=5,pady=(20,0))
 
         bg_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_bg_colour, *bg_colour_options, command= self.update_font)
         bg_colour_dropdown.grid(row=1, column=2, padx=5, pady=(5,20))
@@ -268,7 +268,7 @@ class SettingsPage(tk.Frame):
 
         ''' FORTH DROP DOWN '''
         target_lang_label = Label(self.button_hold_frame, text="Text Color:")
-        target_lang_label.grid(row,0,column=3,padx=(5,20),pady=(20,0))
+        target_lang_label.grid(row=0,column=3,padx=(5,20),pady=(20,0))
 
         language_dropdown = OptionMenu(self.button_hold_frame, self.selected_language, *language_options, command= self.update_font)
         language_dropdown.grid(row=1, column=3, padx=(5,20), pady=(5,20))
