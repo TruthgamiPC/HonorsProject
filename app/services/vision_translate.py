@@ -81,19 +81,13 @@ class HistoryPage(tk.Frame):
 
         # List boxes
         self.imagesList = Listbox(list_frame, yscrollcommand= list_scrollbar.set ,bd=5,height=15,width=23)
-        # self.imagesList.grid(row=0, column=0,padx=5,pady=50)
         self.imagesList.pack(side="left")
 
         list_scrollbar.config(command = self.imagesList.yview)
-        # list_scrollbar.grid(row=0, column=1)
         list_scrollbar.pack(side="right",fill="y")
 
         # Bind The Listbox
         self.imagesList.bind("<<ListboxSelect>>", lambda x: self.listbox_func())
-
-        # img = PhotoImage(file="../images_bound/"+fileReading.image_files[0])
-        # img = ImageTk.PhotoImage(Image.open("../images_bound/" + fileReading.image_files[0]))
-        # print("../images_bound/" + self.controller.fileReading.image_files[0])
 
         self.controller.selected_img = self.controller.fileReading.image_files[0]
         img= (Image.open("../images_bound/" + self.controller.recive_selected_img()))
@@ -151,12 +145,12 @@ class HistoryPage(tk.Frame):
                 if os.path.exists(each + i_img_name):
                     os.remove(each + i_img_name)
                 else:
-                    print("Image file not found: " + each + i_img_name)
+                    # print("Image file not found: " + each + i_img_name)
             else:
                 if os.path.exists(each + t_img_name + '.json'):
                     os.remove(each + t_img_name + '.json')
                 else:
-                    print("Json file not found: " + each + t_img_name + '.json')
+                    # print("Json file not found: " + each + t_img_name + '.json')
 
         # Updating the list after a delete has been done.
         self.update_delete()
@@ -171,35 +165,32 @@ class HistoryPage(tk.Frame):
     def update_delete(self):
         self.controller.fileReading.searchDir()
         detected_num = len(self.controller.fileReading.image_files)
-        print(detected_num)
+        # print(detected_num)
         for x, listbox_entry in enumerate(self.imagesList.get(0,END)):
             self.imagesList.delete(x)
-            print(x)
+            # print(x)
             if (x) <= (detected_num-1):
                 self.imagesList.insert(x,self.controller.fileReading.image_files[x])
 
     def change_img(self, n_img_name):
         self.curr_img_path = "../images_bound/" + n_img_name
         self.update_img()
-        # self.controller.update_select(n_img_name)
 
     def listbox_func(self, *args):
         for each in self.controller.fileReading.image_files:
             if self.imagesList.get(ANCHOR) == each:
-                # self.change_img(each)
                 self.controller.update_select(each)
             else:
                 continue
 
     def update_font(self):
         loader = self.controller.settings_page.load_file()
-        # n_font_size = loader.get('device_settings','font_size')
         tmp_font = tkFont.Font(family='Helvetica', size = 18)
         self.imagesList.configure(width=23, height=18)        # for each_ele in self.imagesList:
         self.imagesList.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
     def update_frame(self):
-        print("History Page Update")
+        # print("History Page Update")
 
         self.update_list()
         self.update_font()
@@ -311,13 +302,9 @@ class TranslationPage(tk.Frame):
     # Constructing the text boxes with translation text
     def receive_text_data(self):
         loaded_json = self.controller.fileReading.targeted_text(self.controller.recive_selected_img())
-        # loader = self.controller.settings_page.load_file()
 
         img_language = self.controller.selected_img
-        # print(img_language[:2])
-        # print(img_language)
         lang_full = self.language_detect(img_language[:2])
-        # language = loader.get('device_settings','target_language')
         self.trans_label.configure(text=f"Translated Text\n- {lang_full} -")
 
 
@@ -346,11 +333,7 @@ class TranslationPage(tk.Frame):
                 self.list_of_text_objects.append(trans_text)
 
                 self.leftFrame.grid_columnconfigure(num,weight=1)
-                # self.leftFrame.grid_rowconfigure(num,weight=1)
-
                 row_counter += 1
-
-
 
     def delete_page_data(self):
         for each_el in self.list_of_text_objects:
@@ -370,7 +353,7 @@ class TranslationPage(tk.Frame):
             each_el.grid()
 
     def switch_display(self):
-        print(self.state_display)
+        # print(self.state_display)
         if self.state_display:
             # Text Version
             if len(self.list_of_text_objects) < 2:
@@ -417,19 +400,14 @@ class TranslationPage(tk.Frame):
             each_ele.configure(fg=loader.get('device_settings','text_colour'), bg=loader.get('device_settings','bg_colour'), font = tmp_font)
 
             if int(n_font_size) == 14:
-                # print(n_font_size)
                 each_ele.configure(width=26, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 26)))
             elif int(n_font_size) == 18:
-                # print(n_font_size)
                 each_ele.configure(width=21, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 21)))
             elif int(n_font_size) == 22:
-                # print(n_font_size)
                 each_ele.configure(width=17, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 17)))
             elif int(n_font_size) == 26:
-                # print(n_font_size)
                 each_ele.configure(width=14, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 14)))
             elif int(n_font_size) == 30:
-                # print(n_font_size)
                 each_ele.configure(width=12, height=(self.length_validaiton(int(len(each_ele.get(1.0,END))), 12))) # , height=4
 
     def length_validaiton(self, text_length, max_length):

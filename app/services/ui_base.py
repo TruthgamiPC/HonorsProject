@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
@@ -7,6 +8,7 @@ from PIL import ImageTk, Image
 from google.cloud import translate_v2 as translate
 
 from picamera import PiCamera
+from subprocess import call
 
 from file_reading import ReadingFiles
 from vision_translate import HistoryPage, TranslationPage
@@ -18,7 +20,7 @@ from configparser import ConfigParser
 import os
 import io
 
-
+# App Class - All window communications and additional class dependencies are created from this classes consturction
 class AppUI(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -121,16 +123,14 @@ class MainPage(tk.Frame):
             rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
-        # self.photoPreview()
-
     #Preview Method needed to display the camera - overlaps 'leftFrame' as picamera has higher priority for display
     def photoPreview(self):
         # return
         if self.state:
-            print("on")
+            # print("on")
             self.camera.start_preview(fullscreen=False,window=(15,10,580,580))
         else:
-            print("off")
+            # print("off")
             self.camera.stop_preview()
         self.state = not self.state
 
@@ -143,18 +143,16 @@ class MainPage(tk.Frame):
         stripped_img_name = self.controller.fileReading.og_strip(n_img_name)
         self.controller.selected_img = stripped_img_name
 
-        print(n_img_name, ' - - - ',stripped_img_name)
+        # print(n_img_name, ' - - - ',stripped_img_name)
 
     def takePhoto(self):
         # Takes a photo the moment the button is pressed
         # Stores it in format : dd-mm-yyyy-HH-MM-SS.jpg
         date = datetime.datetime.now()
         file_ver = str(self.controller.settings_page.target_lang + "-" + date.strftime("%y") + "-" + date.strftime("%m") + "-"  + date.strftime("%d") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
-        # file_ver = "3"
         file_ver = "../images/"+ file_ver + ".png"
-        print(file_ver)
+        # print(file_ver)
         self.camera.capture(file_ver)
-
         self.post_takePhoto(file_ver)
 
     def transition_func(self,directory):
@@ -166,7 +164,7 @@ class MainPage(tk.Frame):
 
     def update_frame(self):
         self.photoPreview()
-        print("Main Page Update")
+        # print("Main Page Update")
 
 class SettingsPage(tk.Frame):
     def __init__(self,parent,controller):

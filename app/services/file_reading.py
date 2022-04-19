@@ -24,7 +24,7 @@ class ReadingFiles():
 
     def targeted_text(self,text_file):
         full_name = '../text_data/' + self.stripper(text_file) + '.json'
-        print(full_name)
+        # print(full_name)
 
         try:
             file = open(full_name,encoding='utf8')
