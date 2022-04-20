@@ -9,6 +9,7 @@ from google.cloud import translate_v2 as translate
 
 from picamera import PiCamera
 from subprocess import call
+from time import sleep
 
 from file_reading import ReadingFiles
 from vision_translate import HistoryPage, TranslationPage
@@ -303,11 +304,14 @@ class SettingsPage(tk.Frame):
         trans_page_btn = Button(rightFrame,text="View\nTranslation", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("TranslationPage"))
         trans_page_btn.grid(row=1,column=0,padx=5,pady=4)
 
-        buttonList = [history_btn,main_page_btn,trans_page_btn]
+        shutdow_btn = Button(rightFrame, text="Save\nShutdown", font= self.controller.button_font, width=70,height=3, command = lambda: self.shutdown_call())
+        shutdow_btn.grid(row=3,column=0,padx=5,pady(16,4))
+
+        buttonList = [history_btn,main_page_btn,trans_page_btn,shutdow_btn]
         counter = 0
         for x in buttonList:
             rightFrame.grid_columnconfigure(counter,weight=1)
-            # rightFrame.grid_rowconfigure(counter,weight=1)
+            rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
     def write_settigns(self):
@@ -397,6 +401,11 @@ class SettingsPage(tk.Frame):
     def update_font(self, event):
         # Burner function that is used to accept event state
         self.update_font_c()
+
+    def shutdown_call(self):
+        self.write_settigns()
+        sleep(1)
+        call("sudo shutdown -h now")
 
     def transition_func(self,directory):
         # Default type of function to transition in between frames
