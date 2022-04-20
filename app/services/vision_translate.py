@@ -90,7 +90,7 @@ class HistoryPage(tk.Frame):
         self.imagesList.bind("<<ListboxSelect>>", lambda x: self.listbox_func())
 
         self.controller.selected_img = self.controller.fileReading.image_files[0]
-        img= (Image.open("../images_bound/" + self.controller.recive_selected_img()))
+        img= (Image.open("./images_bound/" + self.controller.recive_selected_img()))
         resized_image= img.resize((250,250), Image.ANTIALIAS)
         new_image= ImageTk.PhotoImage(resized_image)
 
@@ -137,7 +137,7 @@ class HistoryPage(tk.Frame):
             counter += 1
 
     def delete_func(self):
-        dirs = ['../images_bound/','../images/','../text_data/']
+        dirs = ['./images_bound/','./images/','./text_data/']
         i_img_name = self.controller.selected_img
         t_img_name = self.controller.fileReading.stripper(i_img_name)
         for n,each in enumerate(dirs):
@@ -145,12 +145,12 @@ class HistoryPage(tk.Frame):
                 if os.path.exists(each + i_img_name):
                     os.remove(each + i_img_name)
                 else:
-                    # print("Image file not found: " + each + i_img_name)
+                    print("Image file not found: " + each + i_img_name)
             else:
                 if os.path.exists(each + t_img_name + '.json'):
                     os.remove(each + t_img_name + '.json')
                 else:
-                    # print("Json file not found: " + each + t_img_name + '.json')
+                     print("Json file not found: " + each + t_img_name + '.json')
 
         # Updating the list after a delete has been done.
         self.update_delete()
@@ -173,7 +173,7 @@ class HistoryPage(tk.Frame):
                 self.imagesList.insert(x,self.controller.fileReading.image_files[x])
 
     def change_img(self, n_img_name):
-        self.curr_img_path = "../images_bound/" + n_img_name
+        self.curr_img_path = "./images_bound/" + n_img_name
         self.update_img()
 
     def listbox_func(self, *args):
@@ -372,7 +372,7 @@ class TranslationPage(tk.Frame):
         self.state_display = not self.state_display
 
     def change_img(self, n_img_name):
-        self.curr_img_path = "../images_bound/" + n_img_name
+        self.curr_img_path = "./images_bound/" + n_img_name
         self.update_img()
 
     def update_img(self):

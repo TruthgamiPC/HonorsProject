@@ -136,6 +136,7 @@ class MainPage(tk.Frame):
         self.state = not self.state
 
     def post_takePhoto(self,n_img_name):
+        print(n_img_name)
         self.controller.selected_img = n_img_name
 
         vision_func = VisionEntry(n_img_name,self.controller.settings_page.target_lang)
@@ -151,7 +152,7 @@ class MainPage(tk.Frame):
         # Stores it in format : dd-mm-yyyy-HH-MM-SS.jpg
         date = datetime.datetime.now()
         file_ver = str(self.controller.settings_page.target_lang + "-" + date.strftime("%y") + "-" + date.strftime("%m") + "-"  + date.strftime("%d") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
-        file_ver = "../images/"+ file_ver + ".png"
+        file_ver = "./images/"+ file_ver + ".png"
         # print(file_ver)
         self.camera.capture(file_ver)
         self.post_takePhoto(file_ver)
@@ -269,7 +270,7 @@ class SettingsPage(tk.Frame):
         f_colour_menu.config(font=font_first)
 
         ''' THIRD DROP DOWN '''
-        bg_colour_label = Label(self.button_hold_frame, text="Background Colour:", font=font_labels,bg="#c7c7c7")
+        bg_colour_label = Label(self.button_hold_frame, text="Background\nColour:", font=font_labels,bg="#c7c7c7")
         bg_colour_label.grid(row=2,column=1,padx=5,pady=(20,0))
 
         bg_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_bg_colour, *bg_colour_options, command= self.update_font)
@@ -304,14 +305,14 @@ class SettingsPage(tk.Frame):
         trans_page_btn = Button(rightFrame,text="View\nTranslation", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("TranslationPage"))
         trans_page_btn.grid(row=1,column=0,padx=5,pady=4)
 
-        shutdow_btn = Button(rightFrame, text="Save\nShutdown", font= self.controller.button_font, width=70,height=3, command = lambda: self.shutdown_call())
-        shutdow_btn.grid(row=3,column=0,padx=5,pady(16,4))
+        shutdow_btn = Button(rightFrame, text="Safe\nShutdown", font= self.controller.button_font,bg="red",fg="white", width=70,height=3, command = lambda: self.shutdown_call())
+        shutdow_btn.grid(row=3,column=0,padx=5,pady=(40,4))
 
         buttonList = [history_btn,main_page_btn,trans_page_btn,shutdow_btn]
         counter = 0
         for x in buttonList:
             rightFrame.grid_columnconfigure(counter,weight=1)
-            rightFrame.grid_rowconfigure(counter,weight=1)
+            #rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
     def write_settigns(self):
@@ -405,7 +406,7 @@ class SettingsPage(tk.Frame):
     def shutdown_call(self):
         self.write_settigns()
         sleep(1)
-        call("sudo shutdown -h now")
+        call("sudo shutdown -h now", shell=True)
 
     def transition_func(self,directory):
         # Default type of function to transition in between frames

@@ -51,7 +51,7 @@ class VisionEntry():
                 color,
             )
 
-        correct_ver = '../images_bound/' + self.out_img
+        correct_ver = './images_bound/' + self.out_img
         if correct_ver != 0:
             image.save(correct_ver)
         else:
@@ -153,14 +153,14 @@ class VisionEntry():
 
 
     def trim_input_data(self):
-        self.out_img = self.source.replace('old ','').replace('images','')
+        self.out_img = self.source.replace('old ','').replace('./images','')
         self.out_img = self.out_img.replace('..','').replace('/','').replace('\\','')
 
 
     def alter_output(self):
         self.out_text = self.out_img.replace('.jpg', '').replace('.png', '')
         # print(self.out_text)
-        self.out_text = '../text_data/' + self.out_text + '.json'
+        self.out_text = './text_data/' + self.out_text + '.json'
         # print(self.out_text)
 
 
@@ -199,12 +199,3 @@ class VisionEntry():
 
         with open(self.out_text,'w', encoding="utf-8") as outfile:
             outfile.write(json_str)
-
-
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("detect_file",help="The image for text detection")
-#     args = parser.parse_args()
-#
-#     vision_C = VisionEntry(args.detect_file)
-#     vision_C.vision_op()
