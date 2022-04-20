@@ -145,12 +145,12 @@ class HistoryPage(tk.Frame):
                 if os.path.exists(each + i_img_name):
                     os.remove(each + i_img_name)
                 else:
-                    # print("Image file not found: " + each + i_img_name)
+                    print("Image file not found: " + each + i_img_name)
             else:
                 if os.path.exists(each + t_img_name + '.json'):
                     os.remove(each + t_img_name + '.json')
                 else:
-                    # print("Json file not found: " + each + t_img_name + '.json')
+                     print("Json file not found: " + each + t_img_name + '.json')
 
         # Updating the list after a delete has been done.
         self.update_delete()
