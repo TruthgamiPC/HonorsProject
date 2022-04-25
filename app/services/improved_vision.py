@@ -4,7 +4,6 @@ import json
 
 from structures import *
 
-import six
 import argparse
 
 from PIL import Image, ImageDraw
@@ -19,7 +18,7 @@ from google.cloud import translate_v2 as translate
 
 # Identify text blocks - genreate image with labels
 class VisionEntry():
-    def __init__(self,source):
+    def __init__(self,source,lang_pass):
         self.source = source
         self.out_img = ""
         self.out_text = ""
@@ -27,6 +26,7 @@ class VisionEntry():
         self.TranslatedObj = Page([])
         self.bounds_para = []
         self.bounds_block = []
+        self.target_lang_pass = lang_pass
 
 
     def draw_boxes(self,image,bounds,color):
@@ -50,7 +50,7 @@ class VisionEntry():
                 color,
             )
 
-        correct_ver = '../images_bound/' + self.out_img
+        correct_ver = './images_bound/' + self.out_img
         if correct_ver != 0:
             image.save(correct_ver)
         else:
@@ -152,14 +152,14 @@ class VisionEntry():
 
 
     def trim_input_data(self):
-        self.out_img = self.source.replace('old ','').replace('images','')
+        self.out_img = self.source.replace('old ','').replace('./images','')
         self.out_img = self.out_img.replace('..','').replace('/','').replace('\\','')
 
 
     def alter_output(self):
         self.out_text = self.out_img.replace('.jpg', '').replace('.png', '')
         # print(self.out_text)
-        self.out_text = '../text_data/' + self.out_text + '.json'
+        self.out_text = './text_data/' + self.out_text + '.json'
         # print(self.out_text)
 
 
@@ -173,7 +173,7 @@ class VisionEntry():
         self.draw_boxes(image2,self.bounds_block,"blue")
         self.draw_boxes(image2,self.bounds_para,"red")
 
-        self.translation_func("bg")
+        self.translation_func(self.target_lang_pass)
         self.alter_output()
 
         xd_dict = {}

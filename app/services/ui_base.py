@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
@@ -7,6 +8,7 @@ from PIL import ImageTk, Image
 from google.cloud import translate_v2 as translate
 
 from picamera import PiCamera
+from subprocess import call
 from time import sleep
 
 from file_reading import ReadingFiles
@@ -19,7 +21,7 @@ from configparser import ConfigParser
 import os
 import io
 
-
+# App Class - All window communications and additional class dependencies are created from this classes consturction
 class AppUI(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -45,6 +47,7 @@ class AppUI(tk.Tk):
             # put all of the pages in the same location the one on the top of the stacking order will be the one that is visible.
             frame.grid(row=0, column=0, sticky="nsew")
 
+        self.main_page = self.frames["MainPage"]
         self.settings_page = self.frames["SettingsPage"]
         self.show_frame("MainPage")
 
@@ -108,7 +111,7 @@ class MainPage(tk.Frame):
         history_btn = Button(rightFrame,text="History",font = self.controller.button_font,width=100,height=7, command = lambda : self.transition_func("HistoryPage"))
         history_btn.grid(row=1,column=0,padx=5,pady=4)
 
-        self.view_translation_btn = Button(rightFrame,text="View Translation",font = self.controller.button_font,width=100,height=7, command= lambda : self.transition_func("TranslationPage"))
+        self.view_translation_btn = Button(rightFrame,text="View\nTranslation",font = self.controller.button_font,width=100,height=7, command= lambda : self.transition_func("TranslationPage"))
         self.view_translation_btn.grid(row=2,column=0,padx=5,pady=4)
 
         takePhoto_btn = Button(rightFrame,text="Take photo",font = self.controller.button_font,width=100,height=10, command = lambda : self.takePhoto())
@@ -121,52 +124,49 @@ class MainPage(tk.Frame):
             rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
-        # self.photoPreview()
-
     #Preview Method needed to display the camera - overlaps 'leftFrame' as picamera has higher priority for display
     def photoPreview(self):
         # return
         if self.state:
-            print("on")
-            self.camera.start_preview(fullscreen=False,window=(5,10,580,580))
+            # print("on")
+            self.camera.start_preview(fullscreen=False,window=(15,10,580,580))
         else:
-            print("off")
+            # print("off")
             self.camera.stop_preview()
         self.state = not self.state
 
     def post_takePhoto(self,n_img_name):
+        print(n_img_name)
         self.controller.selected_img = n_img_name
 
-        vision_func = VisionEntry(n_img_name)
+        vision_func = VisionEntry(n_img_name,self.controller.settings_page.target_lang)
         vision_func.vision_op()
-        sleep(3)
 
         stripped_img_name = self.controller.fileReading.og_strip(n_img_name)
         self.controller.selected_img = stripped_img_name
 
-        print(n_img_name, ' - - - ',stripped_img_name)
-        
+        # print(n_img_name, ' - - - ',stripped_img_name)
+
     def takePhoto(self):
         # Takes a photo the moment the button is pressed
         # Stores it in format : dd-mm-yyyy-HH-MM-SS.jpg
         date = datetime.datetime.now()
-        file_ver = str(date.strftime("%d") + "-" + date.strftime("%m") + "-" + date.strftime("%Y") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
-        # file_ver = "3"
-        file_ver = "../images/"+ file_ver + ".png"
-        print(file_ver)
+        file_ver = str(self.controller.settings_page.target_lang + "-" + date.strftime("%y") + "-" + date.strftime("%m") + "-"  + date.strftime("%d") + "-" + date.strftime("%H") + "-" + date.strftime("%M") + "-" + date.strftime("%S"))
+        file_ver = "./images/"+ file_ver + ".png"
+        # print(file_ver)
         self.camera.capture(file_ver)
-                
         self.post_takePhoto(file_ver)
 
     def transition_func(self,directory):
         # Default type of function to transition in between frames
         # Used to allow for page updates from a lambda command call
         self.photoPreview()
+        self.camera.stop_preview()
         self.controller.show_frame(directory)
 
     def update_frame(self):
         self.photoPreview()
-        print("Main Page Update")
+        # print("Main Page Update")
 
 class SettingsPage(tk.Frame):
     def __init__(self,parent,controller):
@@ -174,17 +174,21 @@ class SettingsPage(tk.Frame):
 
         self.configure(bg='grey70')
         self.controller = controller
-        font_first = tkFont.Font(family='Helvetica',size=28)
+        font_first = tkFont.Font(family='Helvetica',size=23)
+        font_labels = tkFont.Font(family='Arial', size=16)
         self.settings_translate = translate.Client()
         self.target_lang = ""
-        
+
         font_options = [14,18,22,26,30]
         self.selected_font_size = StringVar(self)
 
-        f_colour_options = ['Black','Red','Yellow','White']
+        type_options = ['Times','Arial','Tahoma','Verdana']
+        self.selected_type = StringVar(self)
+
+        f_colour_options = ['Black','White','Green','Blue','Red','Yellow']
         self.selected_f_colour = StringVar(self)
 
-        bg_colour_options = ['White','Yellow','Orange','Black']
+        bg_colour_options = ['White','Black','Yellow','Blue','Orange','Green']
         self.selected_bg_colour = StringVar(self)
 
         language_options = ['English','French','German','Bulgarian','Italian','Dutch','Russian']
@@ -207,65 +211,87 @@ class SettingsPage(tk.Frame):
 
         ''' LEFT SIDE'''
         self.font_text_box = tkFont.Font(family='Helvetica',size=self.selected_font_size.get())
-        
+
         # Frame for buttons
         self.button_hold_frame = Frame(leftFrame,bg="#c7c7c7")
-        self.button_hold_frame.grid(column=0,row=0, pady=(40,0))
- 
-         
+        self.button_hold_frame.grid(column=0,row=0, pady=(20,0))
+
          # Frame for text demo
         self.child_left_frame = Frame(leftFrame, highlightbackground="black", highlightthickness=2,bg="#c7c7c7")
-        self.child_left_frame.grid(column=0, row=1, padx=40,pady=20)
-        
-        
+        self.child_left_frame.grid(column=0, row=1, padx=20,pady=20)
+
+
         # Original Text display
         self.og_text_box = tk.Text(self.child_left_frame, height=1, width=20)
         self.og_text_box.grid(column=0,row=0,pady=10,padx=10)
         self.og_text_box.insert(tk.END,'Sample text for demo')
         self.og_text_box.configure(state ='disabled')
         self.og_text_box.configure(font = self.font_text_box)
-        
+
          # Translated Text display
         self.trans_text_box = tk.Text(self.child_left_frame, height=1, width=20)
         self.trans_text_box.grid(column=1,row=0,pady=10,padx=10)
         self.trans_text_box.insert(tk.END,'Sample text for demo')
         self.trans_text_box.configure(state ='disabled')
         self.trans_text_box.configure(font = self.font_text_box)
-        
-        
+
+
         ''' FIRST DROP DOWN '''
+        font_size_label = Label(self.button_hold_frame, text="Font Size", font=font_labels,bg="#c7c7c7")
+        font_size_label.grid(row=0,column=0,padx=(20,5),pady=(20,0))
+
         font_size_dropdown = OptionMenu(self.button_hold_frame, self.selected_font_size, *font_options, command= self.update_font)
-        font_size_dropdown.grid(row=0,column=0,padx=(20,5),pady=25)     
+        font_size_dropdown.grid(row=1,column=0,padx=(20,5),pady=(5,20))
         font_size_dropdown.configure(font=font_first)
 
         size_menu = self.button_hold_frame.nametowidget(font_size_dropdown.menuname)
         size_menu.config(font=font_first)  # Set the dropdown menu's font
 
+        ''' FIRST DROP DOWN '''
+        font_type_label = Label(self.button_hold_frame, text="Font Type", font=font_labels,bg="#c7c7c7")
+        font_type_label.grid(row=2,column=0,padx=(20,5),pady=(20,0))
+
+        font_type_dropdown = OptionMenu(self.button_hold_frame, self.selected_type, *type_options, command= self.update_font)
+        font_type_dropdown.grid(row=3,column=0,padx=(20,5),pady=(5,20))
+        font_type_dropdown.configure(font=font_first)
+
+        type_menu = self.button_hold_frame.nametowidget(font_type_dropdown.menuname)
+        type_menu.config(font=font_first)  # Set the dropdown menu's font
+
         ''' SECOND DROP DOWN '''
+        text_color_label = Label(self.button_hold_frame, text="Text Color", font=font_labels,bg="#c7c7c7")
+        text_color_label.grid(row=0,column=1,padx=5,pady=(20,0))
+
         font_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_f_colour, *f_colour_options, command= self.update_font)
-        font_colour_dropdown.grid(row=0,column=1,padx=5,pady=25)
+        font_colour_dropdown.grid(row=1,column=1,padx=5,pady=(5,20))
         font_colour_dropdown.configure(font=font_first)
 
         f_colour_menu = self.button_hold_frame.nametowidget(font_colour_dropdown.menuname)
         f_colour_menu.config(font=font_first)
 
         ''' THIRD DROP DOWN '''
+        bg_colour_label = Label(self.button_hold_frame, text="Background\nColour:", font=font_labels,bg="#c7c7c7")
+        bg_colour_label.grid(row=2,column=1,padx=5,pady=(20,0))
+
         bg_colour_dropdown = OptionMenu(self.button_hold_frame, self.selected_bg_colour, *bg_colour_options, command= self.update_font)
-        bg_colour_dropdown.grid(row=0, column=2, padx=5, pady=25)
+        bg_colour_dropdown.grid(row=3, column=1, padx=5, pady=(5,20))
         bg_colour_dropdown.configure(font=font_first)
 
         bg_colour_menu = self.button_hold_frame.nametowidget(bg_colour_dropdown.menuname)
         bg_colour_menu.config(font= font_first)
 
         ''' FORTH DROP DOWN '''
+        target_lang_label = Label(self.button_hold_frame, text="Translation\nLanguage", font=font_labels,bg="#c7c7c7")
+        target_lang_label.grid(row=0,column=2,padx=(5,20),pady=(20,0))
+
         language_dropdown = OptionMenu(self.button_hold_frame, self.selected_language, *language_options, command= self.update_font)
-        language_dropdown.grid(row=0, column=3, padx=(5,20), pady=25)
+        language_dropdown.grid(row=1, column=2, padx=(5,20), pady=(5,20))
         language_dropdown.configure(font=font_first)
 
         language_menu = self.button_hold_frame.nametowidget(language_dropdown.menuname)
         language_menu.config(font= font_first)
 
-        self.update_font_c()
+
 
         ''' RIGHT SIDE '''
         # Back to history
@@ -274,20 +300,32 @@ class SettingsPage(tk.Frame):
 
         # Back to Main Page
         main_page_btn = Button(rightFrame,text="New Photo", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("MainPage"))
-        main_page_btn.grid(row=1,column=0,padx=5,pady=4)
+        main_page_btn.grid(row=2,column=0,padx=5,pady=4)
 
-        buttonList = [history_btn,main_page_btn]
+        trans_page_btn = Button(rightFrame,text="View\nTranslation", font = self.controller.button_font ,width=70,height=5, command = lambda : self.transition_func("TranslationPage"))
+        trans_page_btn.grid(row=1,column=0,padx=5,pady=4)
+
+        shutdow_btn = Button(rightFrame, text="Safe\nShutdown", font= self.controller.button_font,bg="red",fg="white", width=70,height=3, command = lambda: self.shutdown_call())
+        shutdow_btn.grid(row=3,column=0,padx=5,pady=(40,4))
+
+        buttonList = [history_btn,main_page_btn,trans_page_btn,shutdow_btn]
         counter = 0
         for x in buttonList:
             rightFrame.grid_columnconfigure(counter,weight=1)
-            # rightFrame.grid_rowconfigure(counter,weight=1)
+            #rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
+      #  self.child_left_frame.rowconfigure(0,weight=1)
+
+       # self.child_left_frame.rowconfigure(1,weight=1)
+
+       # self.child_left_frame.rowconfigure(2,weight=1)
     def write_settigns(self):
         # Export settings to the settings file
         config = ConfigParser()
 
         config['device_settings'] = {
+            'font_type' : str(self.selected_type.get()),
             'font_size' : str(self.selected_font_size.get()),
             'text_colour' : str(self.selected_f_colour.get()),
             'bg_colour' : str(self.selected_bg_colour.get()),
@@ -306,13 +344,14 @@ class SettingsPage(tk.Frame):
     def loading_settings(self):
         loader = self.load_file()
 
+        self.selected_type.set(loader.get('device_settings','font_type'))
         self.selected_font_size.set(loader.get('device_settings','font_size'))
         self.selected_f_colour.set(loader.get('device_settings','text_colour'))
         self.selected_bg_colour.set(loader.get('device_settings','bg_colour'))
         self.selected_language.set(loader.get('device_settings','target_language'))
 
     def update_font_c(self):
-        self.font_text_box = tkFont.Font(family='Helvetica' ,size=self.selected_font_size.get())
+        self.font_text_box = tkFont.Font(family=self.selected_type.get() ,size=self.selected_font_size.get())
 
         self.og_text_box.configure(font = self.font_text_box)
         self.og_text_box.configure(fg=self.selected_f_colour.get())
@@ -323,6 +362,7 @@ class SettingsPage(tk.Frame):
         self.trans_text_box.configure(bg=self.selected_bg_colour.get())
 
         n_font_size = self.selected_font_size.get()
+
 
         for x in [self.og_text_box,self.trans_text_box]:
             if int(n_font_size) == 14:
@@ -364,10 +404,15 @@ class SettingsPage(tk.Frame):
             return (int(text_length / max_length) + (text_length % max_length > 0))
         else:
             return 5
-        
+
     def update_font(self, event):
         # Burner function that is used to accept event state
         self.update_font_c()
+
+    def shutdown_call(self):
+        self.write_settigns()
+        sleep(1)
+        call("sudo shutdown -h now", shell=True)
 
     def transition_func(self,directory):
         # Default type of function to transition in between frames
@@ -376,7 +421,10 @@ class SettingsPage(tk.Frame):
         self.controller.show_frame(directory)
 
     def update_frame(self):
-        return
+        self.controller.main_page.camera.stop_preview()
+        self.controller.main_page.state = True
+        self.update_font_c()
+        # return
 
 
 app = AppUI()
