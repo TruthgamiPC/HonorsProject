@@ -182,13 +182,13 @@ class SettingsPage(tk.Frame):
         font_options = [14,18,22,26,30]
         self.selected_font_size = StringVar(self)
 
-        type_options = ['Times','Arial','Tahoma','Verdana','Helvetica']
+        type_options = ['Times','Arial','Tahoma','Verdana']
         self.selected_type = StringVar(self)
 
-        f_colour_options = ['Black','Red','Yellow','White']
+        f_colour_options = ['Black','White','Green','Blue','Red','Yellow']
         self.selected_f_colour = StringVar(self)
 
-        bg_colour_options = ['White','Yellow','Orange','Black']
+        bg_colour_options = ['White','Black','Yellow','Blue','Orange','Green']
         self.selected_bg_colour = StringVar(self)
 
         language_options = ['English','French','German','Bulgarian','Italian','Dutch','Russian']
@@ -291,7 +291,7 @@ class SettingsPage(tk.Frame):
         language_menu = self.button_hold_frame.nametowidget(language_dropdown.menuname)
         language_menu.config(font= font_first)
 
-        self.update_font_c()
+
 
         ''' RIGHT SIDE '''
         # Back to history
@@ -315,6 +315,11 @@ class SettingsPage(tk.Frame):
             #rightFrame.grid_rowconfigure(counter,weight=1)
             counter += 1
 
+      #  self.child_left_frame.rowconfigure(0,weight=1)
+
+       # self.child_left_frame.rowconfigure(1,weight=1)
+
+       # self.child_left_frame.rowconfigure(2,weight=1)
     def write_settigns(self):
         # Export settings to the settings file
         config = ConfigParser()
@@ -357,6 +362,7 @@ class SettingsPage(tk.Frame):
         self.trans_text_box.configure(bg=self.selected_bg_colour.get())
 
         n_font_size = self.selected_font_size.get()
+
 
         for x in [self.og_text_box,self.trans_text_box]:
             if int(n_font_size) == 14:
@@ -417,6 +423,7 @@ class SettingsPage(tk.Frame):
     def update_frame(self):
         self.controller.main_page.camera.stop_preview()
         self.controller.main_page.state = True
+        self.update_font_c()
         # return
 
 

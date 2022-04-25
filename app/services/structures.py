@@ -12,15 +12,18 @@ class Structures():
     def valid_false(self):
         self.valid = False
 
+# Contains Text Data and a state of true or false if the data is valid for translation
 class Paragraph(Structures):
 
     def add_item(self,data):
         self.field = data
 
+# Contains References of Paragraphs
 class Block(Structures):
     def __init__(self,data):
         self.field = data
 
+# Contains References of Blocks
 class Page(Structures):
     def __init__(self,data):
         self.field = data
