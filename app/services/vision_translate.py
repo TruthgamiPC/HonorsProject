@@ -335,6 +335,10 @@ class TranslationPage(tk.Frame):
                 self.leftFrame.grid_columnconfigure(num,weight=1)
                 row_counter += 1
 
+                row_counter += 1
+
+
+
     def delete_page_data(self):
         for each_el in self.list_of_text_objects:
             each_el.destroy()
