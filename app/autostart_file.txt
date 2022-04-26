@@ -6,8 +6,3 @@ Exec = xterm -hold -e 'usr/bin/python3 /home/pi/app/services/main.py'
 StartupNotify=false
 Terinal=true
 Hidden=false
-
-# Reference for xterm
-# https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup#method-2-autostart
-# Autostart guide
-# https://www.youtube.com/watch?v=cZa1oCSdbUk&ab_channel=BaldGuyDIY
