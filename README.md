@@ -1,10 +1,16 @@
-# HonorsProject
-University Year 4 Honors Project
-## Notice for repository structure
-In the final design of the application on the pi the repository was moved multiple times and there was a large overlap of changes, to overcome this the repository was reset to its current state in main - use main to recreate the repo, other branches have outdated code which is based on a stage of development.
+## Physical Computing - Development of a Portable Translation Device
+## AC40001 Honors Project
+## Preslav Chonev
 
-## Designs
+## Appendices
+
+### Designs
 See Designs folder or click [this](https://github.com/TruthgamiPC/HonorsProject/tree/main/Designs).
 
-## source code
+### Source code
 To access the last iteration of source code proceed in [app](https://github.com/TruthgamiPC/HonorsProject/tree/main/app)/[services](https://github.com/TruthgamiPC/HonorsProject/tree/main/app/services).
+
+In app there is a README explain use of each source code file.
+Addionally can find [links.md](https://github.com/TruthgamiPC/HonorsProject/blob/main/app/links.md) which contains ALL sources used in the implementation of the code + some of the references which are relenvat to the coding of the application.
+
+[autostart_file.txt](https://github.com/TruthgamiPC/HonorsProject/blob/main/app/autostart_file.txt) is the code added to my autostart config folder to boot the application.
