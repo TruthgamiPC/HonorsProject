@@ -6,7 +6,7 @@
 - Widget hiding - https://stackoverflow.com/questions/10267465/showing-and-hiding-widgets
 - images - https://www.tutorialspoint.com/how-to-open-pil-image-in-tkinter-on-canvas#:~:text=In%20order%20to%20open%20the,%2Cy%2Cimage)%20method -
 
-## Everything else used, considered and tested
+## Everything else used, tested and considered
 - https://www.tutorialspoint.com/how-to-stop-tkinter-frame-from-shrinking-to-fit-its-contents
 - https://www.delftstack.com/howto/python-tkinter/how-to-change-the-tkinter-button-size/
 - https://stackoverflow.com/questions/35161101/tkinter-how-to-stop-frame-changing-size-when-widget-is-added
@@ -49,7 +49,7 @@
 - Raspberry Pi Zero 2 W dimensions - https://community.element14.com/resized-image/__size/422x347/__key/communityserver-wikis-components-files/00-00-00-01-69/4426.contentimage_5F00_215699.png
 - PIL text display - https://stackoverflow.com/questions/16373425/add-text-on-image-using-pil
 
-## References I have used/tested at during development
+## Everything else used, tested and considered
 - Handheld console - https://www.youtube.com/watch?v=_MtN_s4tVK0&ab_channel=GreatScott%21
 - https://www.youtube.com/watch?v=R_d_McJ2stg&ab_channel=PaulMcWhorter
 - Screen control modifications - https://raspberrypi.stackexchange.com/questions/34458/touch-screen-the-film-acts-like-mouse-how-can-i-make-it-swipe
@@ -57,3 +57,5 @@
 
 # Miscellaneous
 - file searching -  https://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
+- xterm - https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup#method-2-autostart
+- general autostart guide - https://www.youtube.com/watch?v=cZa1oCSdbUk&ab_channel=BaldGuyDIY

@@ -1,4 +1,3 @@
-# Code functionalities
 ## Code files
 - [main.py](https://github.com/TruthgamiPC/HonorsProject/blob/main/app/services/main.py) - The core of my project, this is the starter script and contains the "App" class which controls the GUI, the Main Page that includes camera methods and the Settings Page.
 - [vision_translate.py](https://github.com/TruthgamiPC/HonorsProject/blob/main/app/services/vision_translate.py) - File containing the GUI of both Translation and History Page.
